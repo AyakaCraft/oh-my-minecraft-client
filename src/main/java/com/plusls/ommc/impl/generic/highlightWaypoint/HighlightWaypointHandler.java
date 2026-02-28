@@ -117,7 +117,7 @@ public class HighlightWaypointHandler {
         return new HighlightWaypointHandler.ParseResult(matcher.group(), new BlockPos(x, y, z), matcher.start());
     }
 
-    public void parseMessage(@NotNull Component chat) {
+    public boolean parseMessage(@NotNull Component chat) {
         chat.getSiblings().forEach(this::parseMessage);
 
         //#if MC > 11802
@@ -134,8 +134,7 @@ public class HighlightWaypointHandler {
                 //$$ !(contents instanceof TranslatableComponent)
                 //#endif
         ) {
-            this.updateMessage(chat);
-            return;
+            return this.updateMessage(chat);
         }
 
         //#if MC > 11802
@@ -147,10 +146,13 @@ public class HighlightWaypointHandler {
 
         for (int i = 0; i < args.length; i++) {
             if (args[i] instanceof Component) {
-                this.parseMessage(ComponentUtil.simple(((Component) args[i]).getString()));
+                Component text = (Component) args[i];
+                if (this.parseMessage(text)) {
+                    args[i] = text;
+                    updateTranslatableText = true;
+                }
             } else if (args[i] instanceof String) {
                 Component text = ComponentUtil.simple(args[i]);
-
                 if (this.updateMessage(text)) {
                     args[i] = text;
                     updateTranslatableText = true;
@@ -164,9 +166,9 @@ public class HighlightWaypointHandler {
             //#else
             //$$ ((AccessorTranslatableComponent) contents).setDecomposedLanguageTime(-1);
             //#endif
+            return true;
         }
-
-        this.updateMessage(chat);
+        return false;
     }
 
     private boolean updateMessage(@NotNull Component chat) {
