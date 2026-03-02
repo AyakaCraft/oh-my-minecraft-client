@@ -1,6 +1,7 @@
 package com.plusls.ommc.mixin.feature.disableMoveDownInScaffolding;
 
 import com.plusls.ommc.game.Configs;
+import com.plusls.ommc.util.ItemUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
@@ -16,6 +17,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+//#if MC>=12103
+//$$ import net.minecraft.network.chat.Component;
+//#endif
 
 //#if MC >= 11903
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -47,7 +52,11 @@ public class MixinScaffoldingBlock {
             //#else
             //$$ String itemId = Registry.ITEM.getKey(item).toString();
             //#endif
-            String itemName = item.getDescription().getString();
+            //#if MC>=12103
+            //$$ String itemName = Component.translatable(item.getDescriptionId()).getString();
+            //#else
+            String itemName = ItemUtil.getItemNameTranslated(item);
+            //#endif
 
             if (Configs.moveDownInScaffoldingWhiteList
                     .getStrings()

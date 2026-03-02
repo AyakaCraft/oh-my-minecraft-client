@@ -21,17 +21,21 @@ public class AutoSwitchElytraHelper {
     public static final int CHEST_SLOT_IDX = 6;
 
     public static boolean checkFall(Player player) {
-        PlayerCompat playerCompat = PlayerCompat.of(player);
-        return !playerCompat.isOnGround() &&
+        return !PlayerCompat.of(player).isOnGround() &&
                 !player.isFallFlying() &&
-                !player.isInWaterOrBubble() &&
+                !player.isInWater() &&
                 !player.isInLava() &&
                 !player.hasEffect(MobEffects.LEVITATION);
     }
 
     public static boolean isChestArmor(ItemStack itemStack) {
+        //#if MC>=12103
+        //$$ var slotGroup = fi.dy.masa.malilib.util.EquipmentUtils.getEquipmentSlot(itemStack);
+        //$$ return slotGroup != null && slotGroup.test(EquipmentSlot.CHEST) && !ItemStackCompat.of(itemStack).is(Items.ELYTRA);
+        //#else
         return InventoryUtil.getEquipmentSlotForItem(itemStack) == EquipmentSlot.CHEST &&
                 !ItemStackCompat.of(itemStack).is(Items.ELYTRA);
+        //#endif
     }
 
     public static void autoSwitch(int sourceSlot, Minecraft client, LocalPlayer localPlayer, Predicate<ItemStack> check) {

@@ -1,0 +1,3 @@
+net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel net.fabricmc.fabric.api.renderer.v1.model.FabricBlockStateModel
+net.fabricmc.fabric.impl.client.indigo.renderer.render.AbstractBlockRenderContext net.fabricmc.fabric.impl.client.indigo.renderer.render.AbstractTerrainRenderContext
+net.fabricmc.fabric.impl.client.indigo.renderer.render.BlockRenderContext net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainLikeRenderContext

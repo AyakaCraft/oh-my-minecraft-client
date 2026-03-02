@@ -1,8 +1,9 @@
 package com.plusls.ommc.mixin.feature.worldEaterMineHelper.sodium;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.plusls.ommc.impl.feature.worldEaterMineHelper.WorldEaterMineHelper;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -10,12 +11,15 @@ import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import top.hendrixshen.magiclib.api.dependency.annotation.Dependency;
 import top.hendrixshen.magiclib.api.dependency.annotation.Dependencies;
 import top.hendrixshen.magiclib.util.MiscUtil;
 
 import java.util.function.Supplier;
+
+//#if MC<12104
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+//#endif
 
 //#if MC > 11802
 import net.minecraft.util.RandomSource;
@@ -29,7 +33,7 @@ import net.minecraft.util.RandomSource;
 @Mixin(targets = "me.jellysquid.mods.sodium.render.renderer.TerrainRenderContext", remap = false)
 public class MixinTerrainRenderContext {
     @Dynamic
-    @Redirect(
+    @WrapOperation(
             method = "renderBlock",
             at = @At(
                     value = "INVOKE",
@@ -48,9 +52,14 @@ public class MixinTerrainRenderContext {
             //#else
             //$$ Supplier<Random> randomSupplier,
             //#endif
-            RenderContext context
+            //#if MC<12104
+            RenderContext context,
+            //#endif
+            Operation<Void> original
     ) {
-        model.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+        //#if MC<12104
+        original.call(model, blockView, state, pos, randomSupplier, context);
         WorldEaterMineHelper.emitCustomBlockQuads(blockView, state, pos, MiscUtil.cast(randomSupplier), context);
+        //#endif
     }
 }

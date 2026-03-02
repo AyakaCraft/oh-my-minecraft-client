@@ -12,7 +12,7 @@ import top.hendrixshen.magiclib.api.compat.minecraft.world.inventory.SlotCompat;
 import top.hendrixshen.magiclib.api.compat.minecraft.world.item.ItemStackCompat;
 import top.hendrixshen.magiclib.util.MiscUtil;
 
-public class CompatGetUtil {
+public final class CompatGetUtil {
     public static LivingEntityCompat getLivingEntityCompat(@NotNull Object obj) {
         LivingEntity thisObj = MiscUtil.cast(obj);
         return LivingEntityCompat.of(thisObj);

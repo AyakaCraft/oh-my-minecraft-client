@@ -20,9 +20,9 @@ import top.hendrixshen.magiclib.api.dependency.annotation.Dependencies;
 import top.hendrixshen.magiclib.api.dependency.annotation.Dependency;
 import top.hendrixshen.magiclib.api.malilib.annotation.Config;
 import top.hendrixshen.magiclib.api.malilib.annotation.Statistic;
+import top.hendrixshen.magiclib.api.malilib.config.MagicConfigHandler;
 import top.hendrixshen.magiclib.api.malilib.config.MagicConfigManager;
 import top.hendrixshen.magiclib.impl.malilib.config.MagicConfigFactory;
-import top.hendrixshen.magiclib.impl.malilib.config.MagicConfigHandler;
 import top.hendrixshen.magiclib.impl.malilib.config.option.*;
 import top.hendrixshen.magiclib.util.collect.ValueContainer;
 import top.hendrixshen.magiclib.util.minecraft.InfoUtil;
@@ -166,16 +166,16 @@ public class Configs {
             MultiPlayerGameMode clientPlayerInteractionManager = client.gameMode;
 
             if (cameraEntity != null && clientPlayerInteractionManager != null) {
-                //#if MC < 12005
-                HitResult hitresult = cameraEntity.pick(clientPlayerInteractionManager.getPickRange(), client.getFrameTime(), false);
-                //#elseif MC >= 12005 && MC <12007
-                //$$ HitResult hitresult = cameraEntity.pick(clientPlayerInteractionManager.hasInfiniteItems() ? 5.0F : 4.5F, client.getFrameTime(), false);
-                //#elseif MC >= 12100
-                //$$ HitResult hitresult = cameraEntity.pick(clientPlayerInteractionManager.hasInfiniteItems() ? 5.0F : 4.5F, client.getFrameTimeNs(), false);
+                //#if MC>=12100
+                //$$ HitResult hitResult = cameraEntity.pick(clientPlayerInteractionManager.getPlayerMode().isCreative() ? 5.0F : 4.5F, client.getFrameTimeNs(), false);
+                //#elseif MC>=12005
+                //$$ HitResult hitResult = cameraEntity.pick(clientPlayerInteractionManager.hasInfiniteItems() ? 5.0F : 4.5F, client.getFrameTime(), false);
+                //#else
+                HitResult hitResult = cameraEntity.pick(clientPlayerInteractionManager.getPickRange(), client.getFrameTime(), false);
                 //#endif
 
-                if (hitresult.getType() == HitResult.Type.BLOCK) {
-                    BlockPos lookPos = ((BlockHitResult) hitresult).getBlockPos();
+                if (hitResult.getType() == HitResult.Type.BLOCK) {
+                    BlockPos lookPos = ((BlockHitResult) hitResult).getBlockPos();
                     if (client.player != null) {
                         String message = String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ());
                         InfoUtil.sendChat(message);

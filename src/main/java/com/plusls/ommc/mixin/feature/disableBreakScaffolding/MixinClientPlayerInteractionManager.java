@@ -1,6 +1,7 @@
 package com.plusls.ommc.mixin.feature.disableBreakScaffolding;
 
 import com.plusls.ommc.game.Configs;
+import com.plusls.ommc.util.ItemUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
@@ -64,7 +65,7 @@ public class MixinClientPlayerInteractionManager {
             //#else
             //$$ String itemId = Registry.ITEM.getKey(player.getMainHandItem().getItem()).toString();
             //#endif
-            String itemName = player.getMainHandItem().getItem().getDescription().getString();
+            String itemName = ItemUtil.getItemNameTranslated(player.getMainHandItem().getItem());
             return Configs.breakScaffoldingWhiteList.getStrings().stream().noneMatch(s -> itemId.contains(s) || itemName.contains(s));
         }
 

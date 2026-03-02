@@ -4,11 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.plusls.ommc.impl.feature.worldEaterMineHelper.WorldEaterMineHelper;
 import com.plusls.ommc.mixin.accessor.AccessorBlockModel;
-import net.minecraft.client.renderer.block.model.BlockElement;
-import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.renderer.block.model.BlockElementRotation;
-import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -23,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import top.hendrixshen.magiclib.api.compat.minecraft.resources.ResourceLocationCompat;
+import top.hendrixshen.magiclib.api.dependency.annotation.Dependencies;
+import top.hendrixshen.magiclib.api.dependency.annotation.Dependency;
 import top.hendrixshen.magiclib.util.MiscUtil;
 
 import java.util.List;
@@ -35,6 +33,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 //$$ import net.minecraft.core.Registry;
 //#endif
 
+@Dependencies(require = @Dependency(value = "minecraft", versionPredicates = "<1.21.4"))
 @Mixin(value = BlockModel.class, priority = 999)
 public abstract class MixinJsonUnbakedModel implements UnbakedModel {
     @Unique
@@ -47,9 +46,10 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
     @Nullable
     protected ResourceLocation parentLocation;
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(
-            //#if MC > 12006
+            //#if MC>=12103
+            //$$ method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;)Lnet/minecraft/client/resources/model/BakedModel;",
+            //#elseif MC > 12006
             //$$ method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Z)Lnet/minecraft/client/resources/model/BakedModel;",
             //#elseif MC > 11902
             method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;",
@@ -67,54 +67,51 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
             //#else
             //$$ ModelBakery baker,
             //#endif
+            //#if MC < 12103
             BlockModel parentModel,
+            //#endif
             //#if MC > 11404
-            Function<Material, TextureAtlasSprite> textureGetter,
+            Function<Material, net.minecraft.client.renderer.texture.TextureAtlasSprite> textureGetter,
             //#else
-            //$$ Function<ResourceLocation, TextureAtlasSprite> textureGetter,
+            //$$ Function<ResourceLocation, net.minecraft.client.renderer.texture.TextureAtlasSprite> textureGetter,
             //#endif
             ModelState modelSettings,
             //#if MC > 11404
             //#if MC < 12100
             ResourceLocation resourceLocation,
             //#endif
+            //#if MC<12103
             boolean hasDepth,
+            //#endif
             //#endif
             CallbackInfoReturnable<BakedModel> cir
     ) {
-        if (!this.ommc$bakeTag.get()) {
-            return;
-        }
-
+        if (!this.ommc$bakeTag.get()) return;
         ResourceLocation identifier = this.parentLocation;
 
-        if (identifier == null) {
-            return;
-        }
-
-        String[] splitResult = identifier.getPath().split("/");
-        ResourceLocation blockId = ResourceLocationCompat.parse(splitResult[splitResult.length - 1]);
-        //#if MC >= 11903
+        if (identifier == null) return;
+        String[]         splitResult = identifier.getPath().split("/");
+        ResourceLocation blockId     = ResourceLocationCompat.parse(splitResult[splitResult.length - 1]);
+        //#if MC>=12103
+        //$$ Block block = BuiltInRegistries.BLOCK.getValue(blockId);
+        //#elseif MC >= 11903
         Block block = BuiltInRegistries.BLOCK.get(blockId);
         //#else
         //$$ Block block = Registry.BLOCK.get(blockId);
         //#endif
 
-        if (block == Blocks.AIR) {
-            return;
-        }
-
+        if (block == Blocks.AIR) return;
         BlockModel model = MiscUtil.cast(this);
         this.ommc$bakeTag.set(false);
-        List<BlockElement> originalModelElements = this.getElements();
+        List<BlockElement> originalModelElements       = this.getElements();
         List<BlockElement> originalModelElementsBackup = Lists.newArrayList(originalModelElements);
         originalModelElements.clear();
 
         for (BlockElement modelElement : originalModelElementsBackup) {
             Vector3f origin = new Vector3f(0F, 67F, 150F);
             origin.mul(0.0625F);
-            BlockElementRotation newModelRotation = new BlockElementRotation(origin, Direction.Axis.X, 45, false);
-            Map<Direction, BlockElementFace> faces = Maps.newHashMap();
+            BlockElementRotation             newModelRotation = new BlockElementRotation(origin, Direction.Axis.X, 45, false);
+            Map<Direction, BlockElementFace> faces            = Maps.newHashMap();
 
             for (Map.Entry<Direction, BlockElementFace> entry : modelElement.faces.entrySet()) {
                 BlockElementFace originalModelElementFace = entry.getValue();
@@ -126,7 +123,11 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
                 faces.put(entry.getKey(), modelElementFace);
             }
 
-            originalModelElements.add(new BlockElement(modelElement.from, modelElement.to, faces, newModelRotation, modelElement.shade));
+            originalModelElements.add(new BlockElement(modelElement.from, modelElement.to, faces, newModelRotation, modelElement.shade
+                    //#if MC>=12103
+                    //$$ , modelElement.lightEmission
+                    //#endif
+            ));
         }
 
         BlockModel blockModel = model;
@@ -137,7 +138,7 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         }
 
         //#if MC > 11903
-        Boolean bool = ((AccessorBlockModel) blockModel).getHasAmbientOcclusion();
+        Boolean bool                     = ((AccessorBlockModel) blockModel).getHasAmbientOcclusion();
         boolean originalAmbientOcclusion = bool == null || bool;
         //#else
         //$$ boolean originalAmbientOcclusion = ((AccessorBlockModel) blockModel).getHasAmbientOcclusion();
@@ -149,14 +150,18 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         // OMMC part only model bake
         BakedModel customBakedModel = model.bake(
                 baker,
+                //#if MC<12103
                 parentModel,
+                //#endif
                 textureGetter,
                 //#if MC > 11404
-                modelSettings,
+                modelSettings
                 //#if MC <= 12006
-                identifier,
+                , identifier
                 //#endif
-                hasDepth
+                //#if MC<12103
+                , hasDepth
+                //#endif
                 //#else
                 //$$ modelSettings
                 //#endif
@@ -167,14 +172,18 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         originalModelElements.addAll(originalModelElementsBackup);
         BakedModel customFullBakedModel = model.bake(
                 baker,
+                //#if MC<12103
                 parentModel,
+                //#endif
                 textureGetter,
                 //#if MC > 11404
-                modelSettings,
+                modelSettings
                 //#if MC <= 12006
-                identifier,
+                , identifier
                 //#endif
-                hasDepth
+                //#if MC<12103
+                , hasDepth
+                //#endif
                 //#else
                 //$$ modelSettings
                 //#endif
@@ -187,14 +196,18 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         // Bake original model
         BakedModel ret = model.bake(
                 baker,
+                //#if MC<12103
                 parentModel,
+                //#endif
                 textureGetter,
                 //#if MC > 11404
-                modelSettings,
+                modelSettings
                 //#if MC <= 12006
-                identifier,
+                , identifier
                 //#endif
-                hasDepth
+                //#if MC<12103
+                , hasDepth
+                //#endif
                 //#else
                 //$$ modelSettings
                 //#endif

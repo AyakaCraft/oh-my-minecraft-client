@@ -8,6 +8,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(AbstractContainerScreen.class)
 public interface AccessorAbstractContainerScreen {
 
+    //#if MC>=12103
+    //$$ @Invoker("getHoveredSlot")
+    //#else
     @Invoker
+    //#endif
     Slot invokeFindSlot(double d, double e);
 }

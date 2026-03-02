@@ -4,7 +4,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-//#if MC > 12006
+//#if MC>=12103
+//#elseif MC > 12006
 //$$ import net.minecraft.world.item.Equipable;
 //#elseif MC > 11605
 import net.minecraft.world.entity.LivingEntity;
@@ -12,7 +13,8 @@ import net.minecraft.world.entity.LivingEntity;
 //$$ import net.minecraft.world.entity.Mob;
 //#endif
 
-public class InventoryUtil {
+public final class InventoryUtil {
+    //#if MC<12103
     public static @NotNull EquipmentSlot getEquipmentSlotForItem(ItemStack itemStack) {
         //#if MC > 12006
         //$$ Equipable equipable = Equipable.get(itemStack);
@@ -23,4 +25,5 @@ public class InventoryUtil {
         //$$ return Mob.getEquipmentSlotForItem(itemStack);
         //#endif
     }
+    //#endif
 }

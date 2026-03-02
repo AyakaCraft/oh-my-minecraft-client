@@ -33,7 +33,10 @@ public abstract class MixinPlayerEntity {
     @Unique
     private float ommc$original_step_height = 0.0F;
 
-    //#if MC > 12004
+    //#if MC>=12105
+    //$$ @Shadow
+    //$$ protected abstract boolean canFallAtLeast(double par1, double par2, double par3);
+    //#elseif MC > 12004
     //$$ @Shadow
     //$$ protected abstract boolean canFallAtLeast(double par1, double par2, float par3);
     //#endif
@@ -76,7 +79,9 @@ public abstract class MixinPlayerEntity {
             method = "maybeBackOffFromEdge",
             at = @At(
                     value = "INVOKE",
-                    //#if MC > 12004
+                    //#if MC>=12105
+                    //$$ target = "Lnet/minecraft/world/entity/player/Player;canFallAtLeast(DDD)Z"
+                    //#elseif MC > 12004
                     //$$ target = "Lnet/minecraft/world/entity/player/Player;canFallAtLeast(DDF)Z"
                     //#else
                     target = "Lnet/minecraft/world/level/Level;noCollision(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Z"
@@ -88,7 +93,11 @@ public abstract class MixinPlayerEntity {
             //$$ Player entity,
             //$$ double d,
             //$$ double e,
+            //$$ //#if MC>=12105
+            //$$ //$$ double f,
+            //$$ //#else
             //$$ float f,
+            //$$ //#endif
             //#else
             Level level,
             Entity entity,

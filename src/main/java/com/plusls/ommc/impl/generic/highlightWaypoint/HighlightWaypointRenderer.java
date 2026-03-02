@@ -6,11 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import top.hendrixshen.magiclib.MagicLib;
@@ -18,21 +19,17 @@ import top.hendrixshen.magiclib.api.compat.minecraft.client.gui.FontCompat;
 import top.hendrixshen.magiclib.api.compat.minecraft.resources.ResourceLocationCompat;
 import top.hendrixshen.magiclib.api.compat.mojang.blaze3d.vertex.VertexFormatCompat;
 import top.hendrixshen.magiclib.api.event.minecraft.render.RenderLevelListener;
+import top.hendrixshen.magiclib.api.render.context.LevelRenderContext;
 import top.hendrixshen.magiclib.api.render.context.RenderContext;
 import top.hendrixshen.magiclib.impl.render.context.RenderGlobal;
 import top.hendrixshen.magiclib.util.minecraft.PositionUtil;
 import top.hendrixshen.magiclib.util.minecraft.render.RenderUtil;
-
-//#if MC > 12006
-//$$ import top.hendrixshen.magiclib.api.compat.mojang.blaze3d.vertex.VertexFormatCompat;
-//#endif
 
 //#if MC < 11900
 //$$ import net.minecraft.client.Option;
 //#endif
 
 //#if MC > 11605
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.client.renderer.GameRenderer;
 //#else
 //$$ import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -63,12 +60,13 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
     }
 
     @Override
-    public void preRenderLevel(Level level, RenderContext context, float partialTicks) {
+    public void preRenderLevel(ClientLevel level, LevelRenderContext context) {
         // NO-OP
     }
 
     @Override
-    public void postRenderLevel(Level level, RenderContext context, float partialTicks) {
+    public void postRenderLevel(ClientLevel level, LevelRenderContext context) {
+        float partialTicks = RenderUtil.getPartialTick();
         BlockPos waypointPos = HighlightWaypointHandler.getInstance().getHighlightPos();
 
         if (waypointPos == null) {
@@ -93,26 +91,26 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         }
 
         Vec3 vec3 = target.subtract(cameraPos);
-        context = RenderContext.of(
+        LevelRenderContext ctx = RenderContext.level(
                 //#if MC > 11502
                 new PoseStack()
                 //#endif
         );
-        context.pushMatrix();
-        context.translate(vec3.x(), vec3.y(), vec3.z());
+        ctx.pushMatrix();
+        ctx.translate(vec3.x(), vec3.y(), vec3.z());
         RenderGlobal.disableDepthTest();
 
         if (this.lastBeamTime >= System.currentTimeMillis()) {
-            context.pushMatrix();
-            context.translate(-0.5, -0.5, -0.5);
+            ctx.pushMatrix();
+            ctx.translate(-0.5, -0.5, -0.5);
             // TODO: 1.16+ RenderType hook to support beam seeThrough
-            this.renderBeam(level, context, partialTicks);
-            context.popMatrix();
+            this.renderBeam(level, ctx, partialTicks);
+            ctx.popMatrix();
         }
 
-        context.pushMatrix();
+        ctx.pushMatrix();
         //#if MC > 11404
-        context.mulPoseMatrix(
+        ctx.mulPoseMatrix(
                 //#if MC > 11902
                 new Matrix4f().rotation(camera.rotation())
                 //#else
@@ -126,22 +124,22 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         //#endif
 
         float scale = (float) ((renderDistance > 8 ? renderDistance - 8 : 0) * 0.2 + 1) * 0.0265F;
-        context.scale(RenderUtil.getSizeScalingXSign() * scale, -scale, -scale);
+        ctx.scale(RenderUtil.getSizeScalingXSign() * scale, -scale, -scale);
 
-        context.pushMatrix();
-        context.translate(0.0, 5.0, 0.0);
-        this.renderText(context, String.format("x:%d, y:%d, z:%d (%dm)",
+        ctx.pushMatrix();
+        ctx.translate(0.0, 5.0, 0.0);
+        this.renderText(ctx, String.format("x:%d, y:%d, z:%d (%dm)",
                 waypointPos.getX(), waypointPos.getY(), waypointPos.getZ(), (int) distance));
-        context.popMatrix();
+        ctx.popMatrix();
 
         RenderGlobal.disableDepthTest();
-        this.renderIcon(context);
+        this.renderIcon(ctx);
         RenderGlobal.enableDepthTest();
-        context.popMatrix();
-        context.popMatrix();
+        ctx.popMatrix();
+        ctx.popMatrix();
     }
 
-    private void renderBeam(@NotNull Level level, @NotNull RenderContext context, float partialTicks) {
+    private void renderBeam(@NotNull ClientLevel level, @NotNull LevelRenderContext context, float partialTicks) {
         //#if MC > 11404
         MultiBufferSource.BufferSource bufferBuilder = RenderUtil.getBufferSource();
         //#else
@@ -154,9 +152,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                 //#elseif MC > 11404
                 //$$ new PoseStack(),
                 //#else
-                //$$ 0,
-                //$$ 0,
-                //$$ 0,
+                //$$ 0, 0, 0,
                 //#endif
                 //#if MC > 11404
                 bufferBuilder,
@@ -167,11 +163,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                 level.getGameTime(),
                 -128,
                 256,
-                //#if MC > 12006
-                //$$ 0xFF0000,
-                //#else
                 new float[]{1.0f, 0.0f, 0.0f},
-                //#endif
                 0.2F,
                 0.25F
         );
@@ -186,7 +178,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         //#endif
     }
 
-    private void renderText(@NotNull RenderContext context, String text) {
+    private void renderText(@NotNull LevelRenderContext context, String text) {
         FontCompat fontCompat = FontCompat.of(Minecraft.getInstance().font);
         int halfTextWidth = fontCompat.get().width(text) / 2;
         int bgColor = 0x80000000;
@@ -239,13 +231,13 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         //#endif
     }
 
-    private void renderIcon(@NotNull RenderContext context) {
+    private void renderIcon(@NotNull LevelRenderContext context) {
         TextureAtlasSprite icon = HighlightWaypointResourceLoader.targetIdSprite;
         RenderGlobal.enableBlend();
 
         //#if MC > 11605
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
         //#elseif MC > 11404
         //$$ RenderSystem.bindTexture(Objects.requireNonNull(Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS)).getId());
         //#else
@@ -257,12 +249,8 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         //#endif
 
         Tesselator tesselator = Tesselator.getInstance();
-        //#if MC > 12006
-        //$$ BufferBuilder bufferBuilder = tesselator.begin(VertexFormatCompat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        //#else
         BufferBuilder bufferBuilder = tesselator.getBuilder();
         bufferBuilder.begin(VertexFormatCompat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        //#endif
 
         //#if MC > 11502
         Matrix4f matrix4f = context.getMatrixStack().getPoseStack().last().pose();
@@ -276,13 +264,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         float iconG = 0.0f;
         float iconB = 0.0f;
 
-        //#if MC > 12006
-        //$$ bufferBuilder.addVertex(matrix4f, -xWidth, -yWidth, 0.0F).setUv(icon.getU0(), icon.getV0()).setColor(iconR, iconG, iconB, 0.5F);
-        //$$ bufferBuilder.addVertex(matrix4f, -xWidth, yWidth, 0.0F).setUv(icon.getU0(), icon.getV1()).setColor(iconR, iconG, iconB, 0.5F);
-        //$$ bufferBuilder.addVertex(matrix4f, xWidth, yWidth, 0.0F).setUv(icon.getU1(), icon.getV1()).setColor(iconR, iconG, iconB, 0.5F);
-        //$$ bufferBuilder.addVertex(matrix4f, xWidth, -yWidth, 0.0F).setUv(icon.getU1(), icon.getV0()).setColor(iconR, iconG, iconB, 0.5F);
-        //$$ HighlightWaypointRenderer.end(bufferBuilder);
-        //#elseif MC > 11404
+        //#if MC > 11404
         bufferBuilder.vertex(matrix4f, -xWidth, -yWidth, 0.0F).uv(icon.getU0(), icon.getV0()).color(iconR, iconG, iconB, 0.5F).endVertex();
         bufferBuilder.vertex(matrix4f, -xWidth, yWidth, 0.0F).uv(icon.getU0(), icon.getV1()).color(iconR, iconG, iconB, 0.5F).endVertex();
         bufferBuilder.vertex(matrix4f, xWidth, yWidth, 0.0F).uv(icon.getU1(), icon.getV1()).color(iconR, iconG, iconB, 0.5F).endVertex();
@@ -296,13 +278,4 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         //$$ tesselator.end();
         //#endif
     }
-
-    //#if MC > 12006
-    //$$ private static void end(BufferBuilder builder) {
-    //$$     try (MeshData meshData = builder.buildOrThrow()) {
-    //$$         BufferUploader.drawWithShader(meshData);
-    //$$     } catch (Exception ignore) {
-    //$$     }
-    //$$ }
-    //#endif
 }
