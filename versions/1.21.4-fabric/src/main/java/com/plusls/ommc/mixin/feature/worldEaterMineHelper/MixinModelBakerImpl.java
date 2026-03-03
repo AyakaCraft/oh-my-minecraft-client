@@ -27,7 +27,6 @@ import top.hendrixshen.magiclib.api.dependency.annotation.Dependency;
 import java.util.List;
 import java.util.Map;
 
-import static net.minecraft.client.resources.model.UnbakedModel.getTopAmbientOcclusion;
 import static net.minecraft.client.resources.model.UnbakedModel.getTopGuiLight;
 import static net.minecraft.client.resources.model.UnbakedModel.getTopTextureSlots;
 import static net.minecraft.client.resources.model.UnbakedModel.getTopTransforms;
@@ -41,7 +40,7 @@ public class MixinModelBakerImpl {
             method = "bake",
             at = @At(
                     value = "INVOKE",
-                    target = "bakeWithTopModelValues(Lnet/minecraft/client/resources/model/UnbakedModel;Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/resources/model/ModelState;)Lnet/minecraft/client/resources/model/BakedModel;"
+                    target = "Lnet/minecraft/client/resources/model/UnbakedModel;bakeWithTopModelValues(Lnet/minecraft/client/resources/model/UnbakedModel;Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/resources/model/ModelState;)Lnet/minecraft/client/resources/model/BakedModel;"
             )
     )
     private BakedModel bakeCustom(
