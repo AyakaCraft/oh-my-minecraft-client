@@ -54,6 +54,7 @@ public class ShulkerBoxItemHelper {
     //#if MC < 12005
     public static int compareShulkerBox(@Nullable CompoundTag a, @Nullable CompoundTag b) {
         int aSize = 0, bSize = 0;
+        ItemStack aFirst = null, bFirst = null;
 
         if (a != null) {
             CompoundTag tag = a.getCompound("BlockEntityTag");
@@ -61,6 +62,7 @@ public class ShulkerBoxItemHelper {
             if (tag.contains("Items", TagCompat.TAG_LIST)) {
                 ListTag tagList = tag.getList("Items", TagCompat.TAG_COMPOUND);
                 aSize = tagList.size();
+                aFirst = ItemStack.of(tagList.getCompound(0));
             }
         }
 
@@ -70,21 +72,33 @@ public class ShulkerBoxItemHelper {
             if (tag.contains("Items", TagCompat.TAG_LIST)) {
                 ListTag tagList = tag.getList("Items", TagCompat.TAG_COMPOUND);
                 bSize = tagList.size();
+                bFirst = ItemStack.of(tagList.getCompound(0));
             }
         }
 
-        return aSize - bSize;
+        int ret = aSize - bSize;
+        if (ret == 0 && aFirst != null && bFirst != null) {
+            return SortInventoryHelper.ItemStackComparator.INSTANCE.compare(aFirst, bFirst);
+        }
+        return ret;
     }
     //#else
     //$$ public static int compareShulkerBox(@Nullable ItemContainerContents a, @Nullable ItemContainerContents b) {
     //$$     int aSize = 0, bSize = 0;
+    //$$     ItemStack aFirst = null, bFirst = null;
     //$$     if (a != null) {
     //$$         aSize = a.stream().toList().size();
+    //$$         aFirst = a.stream().filter(i -> !i.isEmpty()).findFirst().orElse(null);
     //$$     }
     //$$     if (b != null) {
-    //$$         bSize = b.stream().toList().size();
+    //$$         bSize = b.stream().toList().size();;
+    //$$         bFirst = b.stream().filter(i -> !i.isEmpty()).findFirst().orElse(null);
     //$$     }
-    //$$     return aSize - bSize;
+    //$$     int ret = aSize - bSize;
+    //$$     if (ret == 0 && aFirst != null && bFirst != null) {
+    //$$         return SortInventoryHelper.ItemStackComparator.INSTANCE.compare(aFirst, bFirst);
+    //$$     }
+    //$$     return ret;
     //$$ }
     //#endif
 

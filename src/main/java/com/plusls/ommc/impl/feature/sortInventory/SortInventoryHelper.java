@@ -28,10 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.hendrixshen.magiclib.api.compat.minecraft.world.item.ItemStackCompat;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 //#if MC > 12005
 //$$ import net.minecraft.world.item.component.ItemContainerContents;
@@ -321,7 +318,7 @@ public class SortInventoryHelper {
             sortedItemStacks.add(itemStack);
         }
 
-        sortedItemStacks.sort(new ItemStackComparator());
+        sortedItemStacks.sort(ItemStackComparator.INSTANCE);
 
         // 倒序遍历来确保少的方块放在后面，多的方块放在前面
         for (int i = endSlot - 1; i >= startSlot; i--) {
@@ -410,6 +407,8 @@ public class SortInventoryHelper {
     }
 
     static class ItemStackComparator implements Comparator<ItemStack> {
+        public static final ItemStackComparator INSTANCE = new ItemStackComparator();
+
         @Override
         public int compare(ItemStack a, ItemStack b) {
             int aId = SortInventoryHelper.getItemId(a);
@@ -430,13 +429,14 @@ public class SortInventoryHelper {
             CompoundTag tagB = b.getTag();
             //#else
             //$$ ItemContainerContents tagA = a.get(DataComponents.CONTAINER), tagB = b.get(DataComponents.CONTAINER);
-            //$$     if (tagA == null || tagB == null) {
-            //$$         return -1;
-            //$$     }
             //#endif
 
             if (ShulkerBoxItemHelper.isShulkerBoxBlockItem(a) && ShulkerBoxItemHelper.isShulkerBoxBlockItem(b) &&
-                    a.getItem() == b.getItem()) {
+                    a.getItem() == b.getItem()
+                    //#if MC>=12005
+                    //$$ && tagA != null && tagB != null
+                    //#endif
+            ) {
                 return -ShulkerBoxItemHelper.compareShulkerBox(tagA, tagB);
             }
 

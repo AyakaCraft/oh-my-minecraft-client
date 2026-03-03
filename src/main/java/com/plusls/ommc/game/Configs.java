@@ -24,8 +24,9 @@ import top.hendrixshen.magiclib.api.malilib.config.MagicConfigHandler;
 import top.hendrixshen.magiclib.api.malilib.config.MagicConfigManager;
 import top.hendrixshen.magiclib.impl.malilib.config.MagicConfigFactory;
 import top.hendrixshen.magiclib.impl.malilib.config.option.*;
-import top.hendrixshen.magiclib.util.collect.ValueContainer;
 import top.hendrixshen.magiclib.util.minecraft.InfoUtil;
+
+import java.util.Optional;
 
 public class Configs {
     private static final MagicConfigManager cm = SharedConstants.getConfigManager();
@@ -186,7 +187,7 @@ public class Configs {
 
 
         MagicConfigManager.setHotkeyCallback(Configs.sortInventory,
-                () -> ValueContainer.ofNullable(SortInventoryHelper.sort()).ifPresent(Runnable::run),
+                () -> Optional.ofNullable(SortInventoryHelper.sort()).ifPresent(Runnable::run),
                 false);
 
         Configs.highlightLavaSource.setValueChangeCallback(reloadLevelRender);
