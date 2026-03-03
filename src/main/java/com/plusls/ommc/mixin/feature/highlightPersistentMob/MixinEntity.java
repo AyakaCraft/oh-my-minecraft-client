@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -23,12 +24,18 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 @Mixin(Entity.class)
 public class MixinEntity {
+    @Unique
     private static final List<String> ommc$itemBlackList = Arrays.asList("sword", "bow", "trident", "axe", "fishing_rod");
 
+    @Unique
     private static <T extends Entity> T ommc$getBestEntity(T entity) {
         // Only try to fetch the corresponding server world if the entity is in the actual client world.
         // Otherwise the entity may be for example in Litematica's schematic world.
+        //#if MC>=12108
+        //$$ Level world = entity.level();
+        //#else
         Level world = entity.getCommandSenderWorld();
+        //#endif
         Minecraft client = Minecraft.getInstance();
         T ret = entity;
 

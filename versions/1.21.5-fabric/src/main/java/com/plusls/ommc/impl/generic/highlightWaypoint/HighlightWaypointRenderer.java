@@ -6,7 +6,7 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTexture;
+import com.mojang.blaze3d.systems.ScissorState;
 import com.mojang.blaze3d.vertex.*;
 import com.plusls.ommc.mixin.accessor.AccessorRenderPipelines;
 import lombok.AccessLevel;
@@ -136,7 +136,9 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
 
         RenderGlobal.enableBlend();
 
+        //#if MC<12108
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        //#endif
     }
 
     private void renderText(@NotNull PoseStack stack, String text) {
@@ -151,7 +153,11 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                     text,
                     (float) -halfTextWidth,
                     0.0F,
+                    //#if MC>=12108
+                    //$$ 0xFFFFFFFF,
+                    //#else
                     0xFFFFFF,
+                    //#endif
                     false,
                     stack.last().pose(),
                     immediate,
@@ -174,7 +180,11 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         TextureAtlasSprite icon = HighlightWaypointResourceLoader.targetIdSprite;
         RenderGlobal.enableBlend();
 
+        //#if MC>=12108
+        //$$ RenderSystem.setShaderTexture(0, Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getTextureView());
+        //#else
         RenderSystem.setShaderTexture(0, Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getTexture());
+        //#endif
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.begin(VertexFormatCompat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
@@ -213,26 +223,54 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                 RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
 
                 try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
+                        //#if MC>=12108
+                        //$$ () -> "Immediate draw for ommc waypoint icon",
+                        //$$ renderTarget.getColorTextureView(),
+                        //#else
                         renderTarget.getColorTexture(),
+                        //#endif
                         OptionalInt.empty(),
+                        //#if MC>=12108
+                        //$$ renderTarget.useDepth ? renderTarget.getDepthTextureView() : null,
+                        //#else
                         renderTarget.useDepth ? renderTarget.getDepthTexture() : null,
+                        //#endif
                         OptionalDouble.empty()
                 )) {
                     renderPass.setPipeline(renderPipeline);
                     renderPass.setVertexBuffer(0, gpuBuffer);
-                    if (RenderSystem.SCISSOR_STATE.isEnabled()) {
-                        renderPass.enableScissor(RenderSystem.SCISSOR_STATE);
+                    //#if MC>=12108
+                    //$$ ScissorState scissorState = RenderSystem.getScissorStateForRenderTypeDraws();
+                    //#else
+                    ScissorState scissorState = RenderSystem.SCISSOR_STATE;
+                    //#endif
+                    if (
+                            //#if MC>=12108
+                            //$$ scissorState.enabled()
+                            //#else
+                            scissorState.isEnabled()
+                            //#endif
+                    ) {
+                        //#if MC>=12108
+                        //$$ renderPass.enableScissor(scissorState.x(), scissorState.y(), scissorState.width(), scissorState.height());
+                        //#else
+                        renderPass.enableScissor(scissorState);
+                        //#endif
                     }
 
                     for(int i = 0; i < 12; ++i) {
-                        GpuTexture gpuTexture = RenderSystem.getShaderTexture(i);
+                        var gpuTexture = RenderSystem.getShaderTexture(i);
                         if (gpuTexture != null) {
                             renderPass.bindSampler("Sampler" + i, gpuTexture);
                         }
                     }
 
                     renderPass.setIndexBuffer(gpuBuffer2, indexType);
+                    //#if MC>=12108
+                    //$$ renderPass.drawIndexed(0, 0, meshData.drawState().indexCount(), 1);
+                    //#else
                     renderPass.drawIndexed(0, meshData.drawState().indexCount());
+                    //#endif
                 }
             } catch (Throwable t) {
                 try {
