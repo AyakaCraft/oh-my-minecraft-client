@@ -68,7 +68,13 @@ public class MixinSingleVariantUnbaked {
         for (BlockElement modelElement : originalModelElements) {
             Vector3f origin = new Vector3f(0F, 67F, 150F);
             origin.mul(0.0625F);
-            BlockElementRotation newModelRotation = new BlockElementRotation(origin, Direction.Axis.X, 45, false);
+            BlockElementRotation newModelRotation = new BlockElementRotation(origin,
+                    //#if MC>=12111
+                    //$$ new BlockElementRotation.SingleAxisRotation(Direction.Axis.X, 45),
+                    //#else
+                    Direction.Axis.X, 45,
+                    //#endif
+                    false);
             Map<Direction, BlockElementFace> faces = Maps.newHashMap();
 
             for (Map.Entry<Direction, BlockElementFace> entry : modelElement.faces().entrySet()) {
@@ -83,14 +89,26 @@ public class MixinSingleVariantUnbaked {
         // OMMC part only model bake
         TextureAtlasSprite textureAtlasSprite = resolvedModel.resolveParticleSprite(textureSlots, modelBaker);
         {
-            QuadCollection quadCollection = SimpleUnbakedGeometry.bake(modelElements, textureSlots, modelBaker.sprites(), modelState, resolvedModel);
+            QuadCollection quadCollection = SimpleUnbakedGeometry.bake(modelElements, textureSlots,
+                    //#if MC>=12111
+                    //$$ modelBaker,
+                    //#else
+                    modelBaker.sprites(),
+                    //#endif
+                    modelState, resolvedModel);
             WorldEaterMineHelper.customModels.putIfAbsent(block, new SingleVariant(new SimpleModelWrapper(quadCollection, false, textureAtlasSprite)));
         }
 
         // Full model bake
         modelElements.addAll(originalModelElements);
         {
-            QuadCollection quadCollection = SimpleUnbakedGeometry.bake(modelElements, textureSlots, modelBaker.sprites(), modelState, resolvedModel);
+            QuadCollection quadCollection = SimpleUnbakedGeometry.bake(modelElements, textureSlots,
+                    //#if MC>=12111
+                    //$$ modelBaker,
+                    //#else
+                    modelBaker.sprites(),
+                    //#endif
+                    modelState, resolvedModel);
             WorldEaterMineHelper.customFullModels.putIfAbsent(block, new SingleVariant(new SimpleModelWrapper(quadCollection, false, textureAtlasSprite)));
         }
 

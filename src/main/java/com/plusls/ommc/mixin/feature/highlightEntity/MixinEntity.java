@@ -36,7 +36,13 @@ public abstract class MixinEntity {
             cancellable = true
     )
     private void checkWanderingTraderEntity(CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue() || !this.level.isClientSide) {
+        if (cir.getReturnValue() ||
+                //#if MC>=12109
+                //$$ !this.level.isClientSide()
+                //#else
+                !this.level.isClientSide
+                //#endif
+        ) {
             return;
         }
 
@@ -47,9 +53,9 @@ public abstract class MixinEntity {
         //#endif
 
         String entityName = this.getType().getDescription().getString();
-        if (Configs.highlightEntityListType == UsageRestriction.ListType.WHITELIST) {
+        if (Configs.highlightEntityListType.getOptionListValue() == UsageRestriction.ListType.WHITELIST) {
             cir.setReturnValue(Configs.highlightEntityWhiteList.getStrings().stream().anyMatch(s -> entityId.contains(s) || entityName.contains(s)));
-        } else if (Configs.highlightEntityListType == UsageRestriction.ListType.BLACKLIST) {
+        } else if (Configs.highlightEntityListType.getOptionListValue() == UsageRestriction.ListType.BLACKLIST) {
             cir.setReturnValue(Configs.highlightEntityBlackList.getStrings().stream().noneMatch(s -> entityId.contains(s) || entityName.contains(s)));
         }
     }

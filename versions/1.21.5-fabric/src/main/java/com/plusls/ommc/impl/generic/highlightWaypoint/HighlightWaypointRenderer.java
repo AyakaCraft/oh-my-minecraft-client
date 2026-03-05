@@ -37,6 +37,10 @@ import top.hendrixshen.magiclib.util.minecraft.render.RenderUtil;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
+//#if MC>=12109
+//$$ import net.minecraft.client.renderer.SubmitNodeStorage;
+//#endif
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HighlightWaypointRenderer implements RenderLevelListener {
     @Getter
@@ -49,7 +53,6 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
             .withDepthWrite(false)
             .build();
 
-    public TextureAtlasSprite targetIdSprite;
     protected long lastBeamTime = 0;
 
     public static void init() {
@@ -86,7 +89,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         Vec3      vec3  = target.subtract(cameraPos);
         PoseStack stack = new PoseStack();
         stack.pushPose();
-        stack.translate(vec3.x(), vec3.y(), vec3.z());
+        stack.translate(vec3);
         RenderGlobal.disableDepthTest();
 
         if (this.lastBeamTime >= System.currentTimeMillis()) {
@@ -119,19 +122,34 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
     private void renderBeam(@NotNull ClientLevel level, @NotNull PoseStack stack, float partialTicks) {
         MultiBufferSource.BufferSource bufferBuilder = RenderUtil.getBufferSource();
 
+        //#if MC>=12109
+        //$$ SubmitNodeStorage submitNodeStorage = new SubmitNodeStorage();
+        //#endif
+
         BeaconRenderer.renderBeaconBeam(
                 stack,
+                //#if MC>=12109
+                //$$ submitNodeStorage,
+                //#else
                 bufferBuilder,
+                //#endif
                 HighlightWaypointRenderer.BEAM_LOCATION,
-                partialTicks,
-                1.0F,
-                level.getGameTime(),
+                //#if MC>=12109
+                //$$ 1.0F, Math.floorMod(level.getGameTime(), 40) + partialTicks,
+                //#else
+                partialTicks, 1.0F, level.getGameTime(),
+                //#endif
                 -128,
-                256,
+                2048,
                 0xFF0000,
                 0.2F,
                 0.25F
         );
+
+        //#if MC>=12109
+        //$$ new net.minecraft.client.renderer.feature.CustomFeatureRenderer().render(submitNodeStorage.order(0), bufferBuilder);
+        //#endif
+
         bufferBuilder.endBatch();
 
         RenderGlobal.enableBlend();
@@ -180,10 +198,16 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         TextureAtlasSprite icon = HighlightWaypointResourceLoader.targetIdSprite;
         RenderGlobal.enableBlend();
 
-        //#if MC>=12108
-        //$$ RenderSystem.setShaderTexture(0, Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getTextureView());
-        //#else
-        RenderSystem.setShaderTexture(0, Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getTexture());
+        //#if MC<12111
+        RenderSystem.setShaderTexture(0,
+                //#if MC>=12109
+                //$$ Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(net.minecraft.data.AtlasIds.BLOCKS).getTextureView()
+                //#elseif MC>=12108
+                //$$ Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getTextureView()
+                //#else
+                Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getTexture()
+                //#endif
+        );
         //#endif
 
         Tesselator tesselator = Tesselator.getInstance();
@@ -258,12 +282,17 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                         //#endif
                     }
 
+                    //#if MC>=12111
+                    //$$ var atlas = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(net.minecraft.data.AtlasIds.BLOCKS);
+                    //$$ renderPass.bindTexture("Sampler0", atlas.getTextureView(), atlas.getSampler());
+                    //#else
                     for(int i = 0; i < 12; ++i) {
                         var gpuTexture = RenderSystem.getShaderTexture(i);
                         if (gpuTexture != null) {
                             renderPass.bindSampler("Sampler" + i, gpuTexture);
                         }
                     }
+                    //#endif
 
                     renderPass.setIndexBuffer(gpuBuffer2, indexType);
                     //#if MC>=12108

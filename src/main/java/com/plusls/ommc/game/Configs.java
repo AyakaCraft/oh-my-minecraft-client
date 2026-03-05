@@ -5,8 +5,8 @@ import com.plusls.ommc.SharedConstants;
 import com.plusls.ommc.impl.feature.sortInventory.SortInventoryShulkerBoxLastType;
 import com.plusls.ommc.impl.feature.sortInventory.SortInventoryHelper;
 import com.plusls.ommc.impl.generic.highlightWaypoint.HighlightWaypointHandler;
-import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
+import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
@@ -140,7 +140,7 @@ public class Configs {
     public static MagicConfigStringList highlightEntityBlackList = Configs.cf.newConfigStringList("highlightEntityBlackList");
 
     @Config(category = ConfigCategory.LIST)
-    public static IConfigOptionListEntry highlightEntityListType = UsageRestriction.ListType.WHITELIST;
+    public static MagicConfigOptionList highlightEntityListType = Configs.cf.newConfigOptionList("highlightEntityListType", UsageRestriction.ListType.WHITELIST);
 
     @Config(category = ConfigCategory.LIST)
     public static MagicConfigStringList highlightEntityWhiteList = Configs.cf.newConfigStringList("highlightEntityWhiteList", ImmutableList.of("minecraft:wandering_trader"));
@@ -157,6 +157,7 @@ public class Configs {
 
         // Generic
         IValueChangeCallback<ConfigBoolean> reloadLevelRender = (option) -> Minecraft.getInstance().levelRenderer.allChanged();
+        IValueChangeCallback<ConfigOptionList> reloadLevelRenderList = (option) -> Minecraft.getInstance().levelRenderer.allChanged();
 
         MagicConfigManager.setHotkeyCallback(Configs.clearWaypoint, () -> HighlightWaypointHandler.getInstance().clearHighlightPos(), true);
         MagicConfigManager.setHotkeyCallback(Configs.openConfigGui, ConfigGui::openGui, true);
@@ -194,7 +195,7 @@ public class Configs {
         Configs.worldEaterMineHelper.setValueChangeCallback(reloadLevelRender);
 
         // List
-        Configs.blockModelNoOffsetListType.setValueChangeCallback(option -> Minecraft.getInstance().levelRenderer.allChanged());
+        Configs.blockModelNoOffsetListType.setValueChangeCallback(reloadLevelRenderList);
     }
 
     private static void onConfigLoaded(MagicConfigHandler magicConfigHandler) {

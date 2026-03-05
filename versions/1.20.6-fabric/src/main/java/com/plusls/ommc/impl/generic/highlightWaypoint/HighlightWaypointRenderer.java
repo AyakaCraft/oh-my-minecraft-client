@@ -115,7 +115,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                 1.0F,
                 level.getGameTime(),
                 -128,
-                256,
+                2048,
                 //#if MC > 12006
                 //$$ 0xFF0000,
                 //#else

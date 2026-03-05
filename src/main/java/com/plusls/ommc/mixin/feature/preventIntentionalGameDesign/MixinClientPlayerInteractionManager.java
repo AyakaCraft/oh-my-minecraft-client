@@ -15,6 +15,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+//#if MC>=12111
+//$$ import net.minecraft.world.attribute.EnvironmentAttributes;
+//#endif
+
 //#if MC > 11502
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 //#endif
@@ -46,7 +50,10 @@ public class MixinClientPlayerInteractionManager {
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = level.getBlockState(blockPos);
         if ((blockState.getBlock() instanceof BedBlock &&
-                //#if MC > 11502
+                //#if MC>=12111
+                //$$ !level.environmentAttributes().getDimensionValue(EnvironmentAttributes.BED_RULE).explodes()) ||
+                //$$ (blockState.getBlock() instanceof RespawnAnchorBlock && !level.environmentAttributes().getDimensionValue(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS))
+                //#elseif MC > 11502
                 !level.dimensionType().bedWorks()) ||
                 (blockState.getBlock() instanceof RespawnAnchorBlock && !level.dimensionType().respawnAnchorWorks())
             //#else

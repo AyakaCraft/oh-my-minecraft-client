@@ -24,9 +24,17 @@ public class PreventWastageOfWaterHelper implements UseItemCallback {
     //$$ @Override
     //$$ public InteractionResult interact(Player player, Level world, InteractionHand hand) {
     //$$     return (Configs.preventWastageOfWater.getBooleanValue()
+    //$$             //#if MC>=12109
+    //$$             //$$ && world.isClientSide()
+    //$$             //#else
     //$$             && world.isClientSide
+    //$$             //#endif
     //$$             && player.getItemInHand(hand).getItem() == Items.WATER_BUCKET
+    //$$             //#if MC>=12111
+    //$$             //$$ && world.environmentAttributes().getDimensionValue(net.minecraft.world.attribute.EnvironmentAttributes.WATER_EVAPORATES))
+    //$$             //#else
     //$$             && world.dimensionType().ultraWarm())
+    //$$             //#endif
     //$$             ? InteractionResult.FAIL
     //$$             : InteractionResult.PASS;
     //$$ }
