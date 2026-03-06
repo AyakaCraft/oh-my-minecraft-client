@@ -81,7 +81,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
             stack.pushPose();
             stack.translate(-0.5, -0.5, -0.5);
             // TODO: 1.16+ RenderType hook to support beam seeThrough
-            this.renderBeam(level, stack, partialTicks);
+            this.renderBeam(level, stack, partialTicks, -waypointPos.getY() - 64);
             stack.popPose();
         }
 
@@ -104,7 +104,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         stack.popPose();
     }
 
-    private void renderBeam(@NotNull ClientLevel level, @NotNull PoseStack stack, float partialTicks) {
+    private void renderBeam(@NotNull ClientLevel level, @NotNull PoseStack stack, float partialTicks, int bottomRelative) {
         MultiBufferSource.BufferSource bufferBuilder = RenderUtil.getBufferSource();
 
         BeaconRenderer.renderBeaconBeam(
@@ -114,7 +114,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                 partialTicks,
                 1.0F,
                 level.getGameTime(),
-                -128,
+                bottomRelative,
                 2048,
                 //#if MC > 12006
                 //$$ 0xFF0000,

@@ -104,7 +104,13 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
             ctx.pushMatrix();
             ctx.translate(-0.5, -0.5, -0.5);
             // TODO: 1.16+ RenderType hook to support beam seeThrough
-            this.renderBeam(level, ctx, partialTicks);
+            this.renderBeam(level, ctx, partialTicks,
+                    //#if MC>=11800
+                    -waypointPos.getY() - 64
+                    //#else
+                    -waypointPos.getY()
+                    //#endif
+            );
             ctx.popMatrix();
         }
 
@@ -139,7 +145,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         ctx.popMatrix();
     }
 
-    private void renderBeam(@NotNull ClientLevel level, @NotNull LevelRenderContext context, float partialTicks) {
+    private void renderBeam(@NotNull ClientLevel level, @NotNull LevelRenderContext context, float partialTicks, int bottomRelative) {
         //#if MC > 11404
         MultiBufferSource.BufferSource bufferBuilder = RenderUtil.getBufferSource();
         //#else
@@ -161,7 +167,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                 partialTicks,
                 1.0F,
                 level.getGameTime(),
-                -128,
+                bottomRelative,
                 2048,
                 new float[]{1.0f, 0.0f, 0.0f},
                 0.2F,
