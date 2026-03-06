@@ -33,10 +33,6 @@ if (mcVersion >= 12005) {
     javaCompatibility = JavaVersion.VERSION_1_8
 }
 
-loom {
-    //silentMojangMappingsLicense()
-}
-
 repositories {
     mavenLocal()
 
@@ -71,7 +67,7 @@ repositories {
 dependencies {
     // Development environment
     minecraft("com.mojang:minecraft:${project.property("dependencies.minecraft_version")}")
-    mappings(loom.officialMojangMappings())
+    mappings(loom.layered {officialMojangMappings()})
 
     // Annotation processor
     modCompileOnly("org.projectlombok:lombok:${project.property("dependencies.lombok_version")}")
@@ -93,13 +89,9 @@ dependencies {
 }
 
 loom {
-    // accessWidenerPath.set(file("src/main/resources/${project.parent.property("mod.id")}.accesswidener"))
-    enableTransitiveAccessWideners.set(false)
+    //silentMojangMappingsLicense()
 
-    interfaceInjection {
-        enableDependencyInterfaceInjection.set(false)
-        isEnabled.set(false)
-    }
+    // accessWidenerPath.set(file("src/main/resources/${project.parent.property("mod.id")}.accesswidener"))
 
     //if (modPlatform == "forge") {
     //    forge {
@@ -107,6 +99,8 @@ loom {
     //        mixinConfig("${project.parent.property("mod.id")}.mixins.json")
     //    }
     //}
+
+    mixin.useLegacyMixinAp = true
 
     runConfigs.configureEach {
         // Dump modified classes automatically.
@@ -134,7 +128,6 @@ loom {
         vmArgs("-Dmagiclib.dev.qol=true")
         vmArgs("-Dmagiclib.dev.qol.dfu.destroy=true")
         runDir("run/server")
-        ideConfigGenerated(true)
     }
 
     //if (fabricLike) {
@@ -205,11 +198,9 @@ loom {
     }
 }
 
-base {
-    setArchivesName("${project.parent.property("mod.archives_base_name")}-mc${project.property("dependencies.minecraft_version")}-${modPlatform}")
-    group("${project.property("mod.maven_group")}")
-    version(project.getModVersion(project.parent))
-}
+base.archivesName = "${project.parent.property("mod.archives_base_name")}-mc${project.property("dependencies.minecraft_version")}-${modPlatform}"
+group = project.property("mod.maven_group")
+version = project.getModVersion(project.parent)
 
 sourceSets {
     dummy {
@@ -221,19 +212,8 @@ sourceSets {
 }
 
 java {
-    if (mcVersion > 11204) {
-        sourceCompatibility(JavaVersion.VERSION_21)
-        targetCompatibility(JavaVersion.VERSION_21)
-    } else if (mcVersion > 11701) {
-        sourceCompatibility(JavaVersion.VERSION_17)
-        targetCompatibility(JavaVersion.VERSION_17)
-    } else if (mcVersion > 11605) {
-        sourceCompatibility(JavaVersion.VERSION_16)
-        targetCompatibility(JavaVersion.VERSION_16)
-    } else {
-        sourceCompatibility(JavaVersion.VERSION_1_8)
-        targetCompatibility(JavaVersion.VERSION_1_8)
-    }
+    sourceCompatibility(javaCompatibility)
+    targetCompatibility(javaCompatibility)
 
     withSourcesJar()
 }
@@ -253,7 +233,6 @@ replaceToken {
     replace("@MOD_IDENTIFIER@", project.parent.property("mod.id").toString().replace("-", "_"))
     replace("@MOD_NAME@"      , project.parent.property("mod.name"))
     replace("@MOD_VERSION@"   , project.getVersionWithCommitHash(this.project.parent) as String)
-    replaceIn("com/plusls/ommc/OhMyMinecraftClientReference")
     replaceIn("com/plusls/ommc/SharedConstants")
 }
 
@@ -350,7 +329,7 @@ tasks.withType(PublishToMavenRepository).configureEach {
 }
 
 tasks.withType(JavaCompile).configureEach { JavaCompile task ->
-    task.options.encoding("UTF-8")
+    task.options.encoding = "UTF-8"
 
     if (mcVersion > 12005) {
         task.options.release.set(21)
