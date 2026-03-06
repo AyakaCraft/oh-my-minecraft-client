@@ -10,7 +10,7 @@ import top.hendrixshen.magiclib.api.dependency.annotation.Dependency;
 import top.hendrixshen.magiclib.libs.com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import top.hendrixshen.magiclib.libs.com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
-@Dependencies(require = @Dependency(value = "sodium", versionPredicates = ">=0.6- <0.7-"))
+@Dependencies(require = @Dependency(value = "sodium", versionPredicates = ">=0.6-"))
 @Pseudo
 @Mixin(value = BlockRenderer.class, remap = false)
 public abstract class MixinBlockRenderer_0_6 {
@@ -22,8 +22,7 @@ public abstract class MixinBlockRenderer_0_6 {
                     target = "Lnet/minecraft/world/level/block/state/BlockState;hasOffsetFunction()Z",
                     ordinal = 0,
                     remap = true
-            ),
-            remap = false
+            )
     )
     private boolean blockModelNoOffset(BlockState blockState, Operation<Boolean> original) {
         if (BlockModelNoOffsetHelper.shouldNoOffset(blockState)) {

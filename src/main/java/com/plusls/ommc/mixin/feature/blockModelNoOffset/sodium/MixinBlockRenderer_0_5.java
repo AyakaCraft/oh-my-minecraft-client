@@ -24,8 +24,7 @@ public class MixinBlockRenderer_0_5 {
                     target = "Lnet/minecraft/world/level/block/state/BlockState;hasOffsetFunction()Z",
                     ordinal = 0,
                     remap = true
-            ),
-            remap = false
+            )
     )
     private boolean blockModelNoOffset(BlockState blockState, Operation<Boolean> original) {
         if (BlockModelNoOffsetHelper.shouldNoOffset(blockState)) {
