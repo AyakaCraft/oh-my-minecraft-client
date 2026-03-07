@@ -53,6 +53,10 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
             .withDepthWrite(false)
             .build();
 
+    //#if MC>=12109
+    private final SubmitNodeStorage submitNodeStorage = new SubmitNodeStorage();
+    //#endif
+
     protected long lastBeamTime = 0;
 
     public static void init() {
@@ -122,10 +126,6 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
     private void renderBeam(@NotNull ClientLevel level, @NotNull PoseStack stack, float partialTicks, int bottomRelative) {
         MultiBufferSource.BufferSource bufferBuilder = RenderUtil.getBufferSource();
 
-        //#if MC>=12109
-        SubmitNodeStorage submitNodeStorage = new SubmitNodeStorage();
-        //#endif
-
         BeaconRenderer.submitBeaconBeam(
                 stack,
                 //#if MC>=12109
@@ -148,6 +148,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
 
         //#if MC>=12109
         new net.minecraft.client.renderer.feature.CustomFeatureRenderer().render(submitNodeStorage.order(0), bufferBuilder);
+        submitNodeStorage.endFrame();
         //#endif
 
         bufferBuilder.endBatch();
