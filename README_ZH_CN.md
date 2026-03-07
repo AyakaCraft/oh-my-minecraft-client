@@ -321,15 +321,20 @@ We have also provided some optional resource packs for this purpose.
 
 - Minecraft 1.14.4
 - Minecraft 1.15.2
-- Minecraft 1.16.5
+- Minecraft 1.16.4-5
 - Minecraft 1.17.1
 - Minecraft 1.18.2
-- Minecraft 1.19.2 (即将终止支持)
-- Minecraft 1.19.3 (即将终止支持)
 - Minecraft 1.19.4
-- Minecraft 1.20.1 (即将终止支持)
-- Minecraft 1.20.2 (即将终止支持)
+- Minecraft 1.20-1.20.1
 - Minecraft 1.20.4
+- Minecraft 1.20.5-6
+- Minecraft 1.21-1.21.1
+- Minecraft 1.21.2-3
+- Minecraft 1.21.4
+- Minecraft 1.21.5
+- Minecraft 1.21.6-8
+- Minecraft 1.21.9-10
+- Minecraft 1.21.11
 
 ### 混淆映射表
 
