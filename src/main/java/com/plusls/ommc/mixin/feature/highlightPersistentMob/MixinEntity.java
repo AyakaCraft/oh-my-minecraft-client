@@ -32,9 +32,9 @@ public class MixinEntity {
         // Only try to fetch the corresponding server world if the entity is in the actual client world.
         // Otherwise the entity may be for example in Litematica's schematic world.
         //#if MC>=12108
-        //$$ Level world = entity.level();
+        Level world = entity.level();
         //#else
-        Level world = entity.getCommandSenderWorld();
+        //$$ Level world = entity.getCommandSenderWorld();
         //#endif
         Minecraft client = Minecraft.getInstance();
         T ret = entity;

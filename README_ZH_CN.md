@@ -313,7 +313,7 @@ We have also provided some optional resource packs for this purpose.
 
 ### 支持
 
-当前主开发版本：1.20.4
+当前主开发版本：1.21.11
 
 并且使用 `预处理` 来兼容各版本。
 
@@ -326,7 +326,7 @@ We have also provided some optional resource packs for this purpose.
 - Minecraft 1.18.2
 - Minecraft 1.19.4
 - Minecraft 1.20-1.20.1
-- Minecraft 1.20.4
+- Minecraft 1.20.4 (即将停止支持)
 - Minecraft 1.20.5-6
 - Minecraft 1.21-1.21.1
 - Minecraft 1.21.2-3

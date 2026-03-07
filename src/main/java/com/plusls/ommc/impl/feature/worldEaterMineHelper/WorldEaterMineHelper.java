@@ -2,10 +2,10 @@ package com.plusls.ommc.impl.feature.worldEaterMineHelper;
 
 import com.plusls.ommc.game.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorBlockStateBase;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockStateModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
@@ -19,11 +19,11 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 //#if MC>=12104
-//$$ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-//$$ import net.minecraft.core.Direction;
-//$$ import java.util.function.Predicate;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.minecraft.core.Direction;
+import java.util.function.Predicate;
 //#else
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+//$$ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 //#endif
 
 //#if MC >= 11903
@@ -33,11 +33,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 //#endif
 
 public class WorldEaterMineHelper {
-    public static final Map<Block, BakedModel> customModels = new HashMap<>();
-    public static final Map<Block, BakedModel> customFullModels = new HashMap<>();
+    public static final Map<Block, BlockStateModel> customModels = new HashMap<>();
+    public static final Map<Block, BlockStateModel> customFullModels = new HashMap<>();
     //#if MC>=12105
-    //$$ public static final ThreadLocal<Boolean> bakingWeighted = ThreadLocal.withInitial(() -> false);
-    //$$ public static final ThreadLocal<Boolean> weightedBaked = ThreadLocal.withInitial(() -> false);
+    public static final ThreadLocal<Boolean> bakingWeighted = ThreadLocal.withInitial(() -> false);
+    public static final ThreadLocal<Boolean> weightedBaked = ThreadLocal.withInitial(() -> false);
     //#endif
 
     public static boolean blockInWorldEaterMineHelperWhitelist(Block block) {
@@ -97,30 +97,30 @@ public class WorldEaterMineHelper {
 
     static public void emitCustomFullBlockQuads(
             //#if MC>=12104
-            //$$ QuadEmitter emitter,
+            QuadEmitter emitter,
             //#endif
-            FabricBakedModel model, BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<?> randomSupplier,
+            FabricBlockStateModel model, BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<?> randomSupplier,
             //#if MC>=12104
-            //$$ Predicate<Direction> context
+            Predicate<Direction> context
             //#else
-            RenderContext context
+            //$$ RenderContext context
             //#endif
     ) {
         Block block = state.getBlock();
 
         if (WorldEaterMineHelper.shouldUseCustomModel(state, pos)) {
-            FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelper.customFullModels.get(block);
+            FabricBlockStateModel customModel = (FabricBlockStateModel) WorldEaterMineHelper.customFullModels.get(block);
             if (customModel != null) {
                 int luminance = ((AccessorBlockStateBase) state).getLightEmission();
                 ((AccessorBlockStateBase) state).setLightEmission(15);
                 //#if MC>=12105
-                //$$ customModel.emitQuads(emitter, blockView, pos, state, MiscUtil.cast(randomSupplier), context);
+                customModel.emitQuads(emitter, blockView, pos, state, MiscUtil.cast(randomSupplier), context);
                 //#else
-                customModel.emitBlockQuads(
+                //$$ customModel.emitBlockQuads(
                         //#if MC>=12104
                         //$$ emitter,
                         //#endif
-                        blockView, state, pos, MiscUtil.cast(randomSupplier), context);
+                //$$         blockView, state, pos, MiscUtil.cast(randomSupplier), context);
                 //#endif
                 ((AccessorBlockStateBase) state).setLightEmission(luminance);
                 return;
@@ -128,48 +128,48 @@ public class WorldEaterMineHelper {
         }
 
         //#if MC>=12105
-        //$$ model.emitQuads(emitter, blockView, pos, state, MiscUtil.cast(randomSupplier), context);
+        model.emitQuads(emitter, blockView, pos, state, MiscUtil.cast(randomSupplier), context);
         //#else
-        model.emitBlockQuads(
+        //$$ model.emitBlockQuads(
                 //#if MC>=12104
                 //$$ emitter,
                 //#endif
-                blockView, state, pos, MiscUtil.cast(randomSupplier), context);
+        //$$         blockView, state, pos, MiscUtil.cast(randomSupplier), context);
         //#endif
     }
 
     public static void emitCustomBlockQuads(
             //#if MC>=12104
-            //$$ QuadEmitter emitter,
+            QuadEmitter emitter,
             //#endif
             BlockAndTintGetter blockView, BlockState state, BlockPos pos,
             //#if MC>=12105
-            //$$ net.minecraft.util.RandomSource randomSupplier,
+            net.minecraft.util.RandomSource randomSupplier,
             //#else
-            Supplier<?> randomSupplier,
+            //$$ Supplier<?> randomSupplier,
             //#endif
             //#if MC>=12104
-            //$$ Predicate<Direction> context
+            Predicate<Direction> context
             //#else
-            RenderContext context
+            //$$ RenderContext context
             //#endif
     ) {
         Block block = state.getBlock();
 
         if (WorldEaterMineHelper.shouldUseCustomModel(state, pos)) {
-            FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelper.customModels.get(block);
+            FabricBlockStateModel customModel = (FabricBlockStateModel) WorldEaterMineHelper.customModels.get(block);
 
             if (customModel != null) {
                 int luminance = ((AccessorBlockStateBase) state).getLightEmission();
                 ((AccessorBlockStateBase) state).setLightEmission(15);
                 //#if MC>=12105
-                //$$ customModel.emitQuads(emitter, blockView, pos, state, MiscUtil.cast(randomSupplier), context);
+                customModel.emitQuads(emitter, blockView, pos, state, MiscUtil.cast(randomSupplier), context);
                 //#else
-                customModel.emitBlockQuads(
+                //$$ customModel.emitBlockQuads(
                         //#if MC>=12104
                         //$$ emitter,
                         //#endif
-                        blockView, state, pos, MiscUtil.cast(randomSupplier), context);
+                //$$         blockView, state, pos, MiscUtil.cast(randomSupplier), context);
                 //#endif
                 ((AccessorBlockStateBase) state).setLightEmission(luminance);
             }

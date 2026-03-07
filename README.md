@@ -313,7 +313,7 @@ Integrated server enable pvp.
 
 ### Support
 
-Current main development for Minecraft version: 1.20.4
+Current main development for Minecraft version: 1.21.11
 
 And use `preprocess` to be compatible with all versions.
 
@@ -326,7 +326,7 @@ And use `preprocess` to be compatible with all versions.
 - Minecraft 1.18.2
 - Minecraft 1.19.4
 - Minecraft 1.20-1.20.1
-- Minecraft 1.20.4
+- Minecraft 1.20.4 (Ending support soon)
 - Minecraft 1.20.5-6
 - Minecraft 1.21-1.21.1
 - Minecraft 1.21.2-3

@@ -1,7 +1,7 @@
 package com.plusls.ommc.mixin.accessor;
 
 import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderContext;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import top.hendrixshen.magiclib.api.dependency.annotation.Dependency;
@@ -11,5 +11,5 @@ import top.hendrixshen.magiclib.api.dependency.annotation.Dependencies;
 @Mixin(BlockRenderContext.class)
 public interface AccessorBlockRenderContext {
     @Accessor
-    void setModel(BakedModel model);
+    void setModel(BlockStateModel model);
 }

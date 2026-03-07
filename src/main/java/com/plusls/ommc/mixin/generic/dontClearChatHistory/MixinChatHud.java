@@ -40,9 +40,9 @@ public class MixinChatHud {
 
     @WrapOperation(
             //#if MC > 11802 && MC < 12005
-            method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;ILnet/minecraft/client/GuiMessageTag;Z)V",
+            //$$ method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;ILnet/minecraft/client/GuiMessageTag;Z)V",
             //#elseif MC >= 12005
-            //$$ method = "addMessageToDisplayQueue",
+            method = "addMessageToDisplayQueue",
             //#else
             //$$ method = "addMessage(Lnet/minecraft/network/chat/Component;IIZ)V",
             //#endif

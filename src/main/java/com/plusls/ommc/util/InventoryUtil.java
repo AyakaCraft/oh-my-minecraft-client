@@ -8,22 +8,22 @@ import org.jetbrains.annotations.NotNull;
 //#elseif MC > 12006
 //$$ import net.minecraft.world.item.Equipable;
 //#elseif MC > 11605
-import net.minecraft.world.entity.LivingEntity;
+//$$ import net.minecraft.world.entity.LivingEntity;
 //#else
 //$$ import net.minecraft.world.entity.Mob;
 //#endif
 
 public final class InventoryUtil {
     //#if MC<12103
-    public static @NotNull EquipmentSlot getEquipmentSlotForItem(ItemStack itemStack) {
+    //$$ public static @NotNull EquipmentSlot getEquipmentSlotForItem(ItemStack itemStack) {
         //#if MC > 12006
         //$$ Equipable equipable = Equipable.get(itemStack);
         //$$ return equipable != null ? equipable.getEquipmentSlot() : EquipmentSlot.MAINHAND;
         //#elseif MC > 11605
-        return LivingEntity.getEquipmentSlotForItem(itemStack);
+        //$$ return LivingEntity.getEquipmentSlotForItem(itemStack);
         //#else
         //$$ return Mob.getEquipmentSlotForItem(itemStack);
         //#endif
-    }
+    //$$ }
     //#endif
 }

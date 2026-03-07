@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 //#if MC>=12103
-//$$ import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Component;
 //#endif
 
 //#if MC >= 11903
@@ -32,7 +32,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 public class MixinScaffoldingBlock {
     @Shadow
     @Final
-    private static VoxelShape STABLE_SHAPE;
+    private static VoxelShape SHAPE_STABLE;
 
     @Inject(
             method = "getCollisionShape",
@@ -43,7 +43,7 @@ public class MixinScaffoldingBlock {
                                        CollisionContext context, CallbackInfoReturnable<VoxelShape> cir) {
         if (context.isDescending() && Configs.disableMoveDownInScaffolding.getBooleanValue() &&
                 context.isAbove(Shapes.block(), pos, true) &&
-                cir.getReturnValue() != MixinScaffoldingBlock.STABLE_SHAPE) {
+                cir.getReturnValue() != MixinScaffoldingBlock.SHAPE_STABLE) {
 
             assert Minecraft.getInstance().player != null;
             Item item = Minecraft.getInstance().player.getMainHandItem().getItem();
@@ -53,9 +53,9 @@ public class MixinScaffoldingBlock {
             //$$ String itemId = Registry.ITEM.getKey(item).toString();
             //#endif
             //#if MC>=12103
-            //$$ String itemName = Component.translatable(item.getDescriptionId()).getString();
+            String itemName = Component.translatable(item.getDescriptionId()).getString();
             //#else
-            String itemName = ItemUtil.getItemNameTranslated(item);
+            //$$ String itemName = ItemUtil.getItemNameTranslated(item);
             //#endif
 
             if (Configs.moveDownInScaffoldingWhiteList
@@ -66,7 +66,7 @@ public class MixinScaffoldingBlock {
                 return;
             }
 
-            cir.setReturnValue(MixinScaffoldingBlock.STABLE_SHAPE);
+            cir.setReturnValue(MixinScaffoldingBlock.SHAPE_STABLE);
         }
     }
 }

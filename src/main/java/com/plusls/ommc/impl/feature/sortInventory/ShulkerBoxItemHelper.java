@@ -11,8 +11,8 @@ import org.jetbrains.annotations.Nullable;
 import top.hendrixshen.magiclib.api.compat.minecraft.nbt.TagCompat;
 
 //#if MC > 12005
-//$$ import net.minecraft.core.component.DataComponents;
-//$$ import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemContainerContents;
 //#endif
 
 public class ShulkerBoxItemHelper {
@@ -24,25 +24,25 @@ public class ShulkerBoxItemHelper {
         }
 
         //#if MC < 12005
-        CompoundTag nbt = itemStack.getTag();
-        if (nbt == null || !nbt.contains("BlockEntityTag", TagCompat.TAG_COMPOUND)) {
-            return true;
-        }
-        CompoundTag tag = nbt.getCompound("BlockEntityTag");
-        if (tag.contains("Items", TagCompat.TAG_LIST)) {
-            ListTag tagList = tag.getList("Items", TagCompat.TAG_COMPOUND);
-            return tagList.isEmpty();
-        }
-        return true;
-        //#else
-        //$$ ItemContainerContents icc = itemStack.get(DataComponents.CONTAINER);
-        //$$     if (icc == null) {
-        //$$         return true;
-        //$$     }
-        //$$     if (icc.stream().allMatch(ItemStack::isEmpty)) {
-        //$$         return true;
-        //$$     }
+        //$$ CompoundTag nbt = itemStack.getTag();
+        //$$ if (nbt == null || !nbt.contains("BlockEntityTag", TagCompat.TAG_COMPOUND)) {
         //$$     return true;
+        //$$ }
+        //$$ CompoundTag tag = nbt.getCompound("BlockEntityTag");
+        //$$ if (tag.contains("Items", TagCompat.TAG_LIST)) {
+        //$$     ListTag tagList = tag.getList("Items", TagCompat.TAG_COMPOUND);
+        //$$     return tagList.isEmpty();
+        //$$ }
+        //$$ return true;
+        //#else
+        ItemContainerContents icc = itemStack.get(DataComponents.CONTAINER);
+            if (icc == null) {
+                return true;
+            }
+            if (icc.stream().allMatch(ItemStack::isEmpty)) {
+                return true;
+            }
+            return true;
         //#endif
     }
 
@@ -52,54 +52,54 @@ public class ShulkerBoxItemHelper {
     }
 
     //#if MC < 12005
-    public static int compareShulkerBox(@Nullable CompoundTag a, @Nullable CompoundTag b) {
-        int aSize = 0, bSize = 0;
-        ItemStack aFirst = null, bFirst = null;
-
-        if (a != null) {
-            CompoundTag tag = a.getCompound("BlockEntityTag");
-
-            if (tag.contains("Items", TagCompat.TAG_LIST)) {
-                ListTag tagList = tag.getList("Items", TagCompat.TAG_COMPOUND);
-                aSize = tagList.size();
-                aFirst = ItemStack.of(tagList.getCompound(0));
-            }
-        }
-
-        if (b != null) {
-            CompoundTag tag = b.getCompound("BlockEntityTag");
-
-            if (tag.contains("Items", TagCompat.TAG_LIST)) {
-                ListTag tagList = tag.getList("Items", TagCompat.TAG_COMPOUND);
-                bSize = tagList.size();
-                bFirst = ItemStack.of(tagList.getCompound(0));
-            }
-        }
-
-        int ret = aSize - bSize;
-        if (ret == 0 && aFirst != null && bFirst != null) {
-            return SortInventoryHelper.ItemStackComparator.INSTANCE.compare(aFirst, bFirst);
-        }
-        return ret;
-    }
-    //#else
-    //$$ public static int compareShulkerBox(@Nullable ItemContainerContents a, @Nullable ItemContainerContents b) {
+    //$$ public static int compareShulkerBox(@Nullable CompoundTag a, @Nullable CompoundTag b) {
     //$$     int aSize = 0, bSize = 0;
     //$$     ItemStack aFirst = null, bFirst = null;
+    //$$
     //$$     if (a != null) {
-    //$$         aSize = a.stream().toList().size();
-    //$$         aFirst = a.stream().filter(i -> !i.isEmpty()).findFirst().orElse(null);
+    //$$         CompoundTag tag = a.getCompound("BlockEntityTag");
+    //$$
+    //$$         if (tag.contains("Items", TagCompat.TAG_LIST)) {
+    //$$             ListTag tagList = tag.getList("Items", TagCompat.TAG_COMPOUND);
+    //$$             aSize = tagList.size();
+    //$$             aFirst = ItemStack.of(tagList.getCompound(0));
+    //$$         }
     //$$     }
+    //$$
     //$$     if (b != null) {
-    //$$         bSize = b.stream().toList().size();;
-    //$$         bFirst = b.stream().filter(i -> !i.isEmpty()).findFirst().orElse(null);
+    //$$         CompoundTag tag = b.getCompound("BlockEntityTag");
+    //$$
+    //$$         if (tag.contains("Items", TagCompat.TAG_LIST)) {
+    //$$             ListTag tagList = tag.getList("Items", TagCompat.TAG_COMPOUND);
+    //$$             bSize = tagList.size();
+    //$$             bFirst = ItemStack.of(tagList.getCompound(0));
+    //$$         }
     //$$     }
+    //$$
     //$$     int ret = aSize - bSize;
     //$$     if (ret == 0 && aFirst != null && bFirst != null) {
     //$$         return SortInventoryHelper.ItemStackComparator.INSTANCE.compare(aFirst, bFirst);
     //$$     }
     //$$     return ret;
     //$$ }
+    //#else
+    public static int compareShulkerBox(@Nullable ItemContainerContents a, @Nullable ItemContainerContents b) {
+        int aSize = 0, bSize = 0;
+        ItemStack aFirst = null, bFirst = null;
+        if (a != null) {
+            aSize = a.stream().toList().size();
+            aFirst = a.stream().filter(i -> !i.isEmpty()).findFirst().orElse(null);
+        }
+        if (b != null) {
+            bSize = b.stream().toList().size();;
+            bFirst = b.stream().filter(i -> !i.isEmpty()).findFirst().orElse(null);
+        }
+        int ret = aSize - bSize;
+        if (ret == 0 && aFirst != null && bFirst != null) {
+            return SortInventoryHelper.ItemStackComparator.INSTANCE.compare(aFirst, bFirst);
+        }
+        return ret;
+    }
     //#endif
 
     public static int getMaxCount(ItemStack itemStack) {

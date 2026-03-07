@@ -1,7 +1,7 @@
 package me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline;
 
 import me.jellysquid.mods.sodium.client.world.WorldSlice;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Vector3f;
@@ -15,14 +15,14 @@ public class BlockRenderContext {
     private final Vector3f origin = new Vector3f();
 
     private BlockState state;
-    private BakedModel model;
+    private BlockStateModel model;
 
     private long seed;
 
     public BlockRenderContext(WorldSlice world) {
     }
 
-    public native void update(BlockPos pos, BlockPos origin, BlockState state, BakedModel model, long seed);
+    public native void update(BlockPos pos, BlockPos origin, BlockState state, BlockStateModel model, long seed);
 
     public native BlockPos pos();
 
@@ -30,7 +30,7 @@ public class BlockRenderContext {
 
     public native BlockState state();
 
-    public native BakedModel model();
+    public native BlockStateModel model();
 
     public native Vector3fc origin();
 

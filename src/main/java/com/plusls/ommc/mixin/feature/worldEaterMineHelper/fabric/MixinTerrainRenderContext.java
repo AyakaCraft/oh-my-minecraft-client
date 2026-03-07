@@ -14,15 +14,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.function.Supplier;
 
 //#if MC>=12104
-//$$ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-//$$ import net.minecraft.core.Direction;
-//$$ import java.util.function.Predicate;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.minecraft.core.Direction;
+import java.util.function.Predicate;
 //#else
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+//$$ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 //#endif
 
 //#if MC>11903
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 //#else
 //$$ import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 //#endif
@@ -40,11 +40,11 @@ public class MixinTerrainRenderContext {
             at = @At(
                     value = "INVOKE",
                     //#if MC>=12105
-                    //$$ target = "Lnet/minecraft/client/renderer/block/model/BlockStateModel;emitQuads(Lnet/fabricmc/fabric/api/renderer/v1/mesh/QuadEmitter;Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/util/RandomSource;Ljava/util/function/Predicate;)V",
+                    target = "Lnet/minecraft/client/renderer/block/model/BlockStateModel;emitQuads(Lnet/fabricmc/fabric/api/renderer/v1/mesh/QuadEmitter;Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/util/RandomSource;Ljava/util/function/Predicate;)V",
                     //#elseif MC>=12104
                     //$$ target = "Lnet/minecraft/client/resources/model/BakedModel;emitBlockQuads(Lnet/fabricmc/fabric/api/renderer/v1/mesh/QuadEmitter;Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Ljava/util/function/Predicate;)V",
                     //#elseif MC>11903
-                    target = "Lnet/minecraft/client/resources/model/BakedModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
+                    //$$ target = "Lnet/minecraft/client/resources/model/BakedModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
                     //#else
                     //$$ target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
                     //#endif
@@ -53,39 +53,39 @@ public class MixinTerrainRenderContext {
     )
     private void emitCustomBlockQuads(
             //#if MC>11903
-            BakedModel instance,
+            BlockStateModel instance,
             //#else
             //$$ FabricBakedModel instance,
             //#endif
             //#if MC>=12104
-            //$$ QuadEmitter emitter,
+            QuadEmitter emitter,
             //#endif
             BlockAndTintGetter blockAndTintGetter,
             //#if MC>=12105
-            //$$ BlockPos blockPos, BlockState blockState, net.minecraft.util.RandomSource supplier,
+            BlockPos blockPos, BlockState blockState, net.minecraft.util.RandomSource supplier,
             //#else
-            BlockState blockState, BlockPos blockPos, Supplier<?> supplier,
+            //$$ BlockState blockState, BlockPos blockPos, Supplier<?> supplier,
             //#endif
             //#if MC>=12104
-            //$$ Predicate<Direction> renderContext,
+            Predicate<Direction> renderContext,
             //#else
-            RenderContext renderContext,
+            //$$ RenderContext renderContext,
             //#endif
             Operation<Void> original) {
         original.call(instance,
                 //#if MC>=12104
-                //$$ emitter,
+                emitter,
                 //#endif
                 blockAndTintGetter,
                 //#if MC>=12105
-                //$$ blockPos, blockState,
+                blockPos, blockState,
                 //#else
-                blockState, blockPos,
+                //$$ blockState, blockPos,
                 //#endif
                 supplier, renderContext);
         WorldEaterMineHelper.emitCustomBlockQuads(
                 //#if MC>=12104
-                //$$ emitter,
+                emitter,
                 //#endif
                 blockAndTintGetter, blockState, blockPos, supplier, renderContext);
     }

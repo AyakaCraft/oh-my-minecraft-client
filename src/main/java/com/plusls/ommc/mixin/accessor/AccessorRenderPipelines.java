@@ -1,11 +1,14 @@
 package com.plusls.ommc.mixin.accessor;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import net.minecraft.client.renderer.RenderPipelines;
 import org.spongepowered.asm.mixin.Mixin;
-import top.hendrixshen.magiclib.api.dependency.annotation.Dependencies;
-import top.hendrixshen.magiclib.api.dependency.annotation.Dependency;
-import top.hendrixshen.magiclib.api.preprocess.DummyClass;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Dependencies(require = @Dependency(value = "minecraft", versionPredicates = ">=1.21.5"))
-@Mixin(DummyClass.class)
-public class AccessorRenderPipelines {
+@Mixin(RenderPipelines.class)
+public interface AccessorRenderPipelines {
+    @Accessor(value = "GUI_TEXTURED_SNIPPET")
+    static RenderPipeline.Snippet getGuiTexturedSnipped() {
+        throw new AssertionError();
+    }
 }

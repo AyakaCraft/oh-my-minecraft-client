@@ -5,7 +5,7 @@ import com.plusls.ommc.mixin.accessor.AccessorBlockRenderContext;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBuildBuffers;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderContext;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,13 +36,13 @@ public abstract class MixinBlockRenderer_0_5 {
     @Inject(method = "renderModel", at = @At("RETURN"))
     private void postRenderModel(@NotNull BlockRenderContext ctx, ChunkBuildBuffers buffers, CallbackInfo ci) {
         if (WorldEaterMineHelper.shouldUseCustomModel(ctx.state(), ctx.pos()) && !this.ommc$renderTag.get()) {
-            BakedModel customModel = WorldEaterMineHelper.customModels.get(ctx.state().getBlock());
+            BlockStateModel customModel = WorldEaterMineHelper.customModels.get(ctx.state().getBlock());
 
             if (customModel != null) {
                 this.ommc$renderTag.set(true);
                 // This impl will break light systems, so disable it.
                 // int originalLightEmission = ctx.state().getLightEmission();
-                BakedModel originalModel = ctx.model();
+                BlockStateModel originalModel = ctx.model();
                 // ((AccessorBlockStateBase) ctx.state()).setLightEmission(15);
                 ((AccessorBlockRenderContext) ctx).setModel(customModel);
                 this.renderModel(ctx, buffers);

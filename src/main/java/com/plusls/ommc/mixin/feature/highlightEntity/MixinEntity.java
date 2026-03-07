@@ -38,9 +38,9 @@ public abstract class MixinEntity {
     private void checkWanderingTraderEntity(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() ||
                 //#if MC>=12109
-                //$$ !this.level.isClientSide()
+                !this.level.isClientSide()
                 //#else
-                !this.level.isClientSide
+                //$$ !this.level.isClientSide
                 //#endif
         ) {
             return;

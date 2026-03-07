@@ -3,7 +3,7 @@ package com.plusls.ommc.mixin.feature.worldEaterMineHelper.sodium;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.plusls.ommc.impl.feature.worldEaterMineHelper.WorldEaterMineHelper;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +18,7 @@ import top.hendrixshen.magiclib.util.MiscUtil;
 import java.util.function.Supplier;
 
 //#if MC<12104
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+//$$ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 //#endif
 
 //#if MC > 11802
@@ -37,13 +37,13 @@ public class MixinTerrainRenderContext {
             method = "renderBlock",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
+                    target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBlockStateModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
                     ordinal = 0,
                     remap = true
             )
     )
     private void emitCustomBlockQuads(
-            FabricBakedModel model,
+            FabricBlockStateModel model,
             BlockAndTintGetter blockView,
             BlockState state,
             BlockPos pos,
@@ -53,13 +53,13 @@ public class MixinTerrainRenderContext {
             //$$ Supplier<Random> randomSupplier,
             //#endif
             //#if MC<12104
-            RenderContext context,
+            //$$ RenderContext context,
             //#endif
             Operation<Void> original
     ) {
         //#if MC<12104
-        original.call(model, blockView, state, pos, randomSupplier, context);
-        WorldEaterMineHelper.emitCustomBlockQuads(blockView, state, pos, MiscUtil.cast(randomSupplier), context);
+        //$$ original.call(model, blockView, state, pos, randomSupplier, context);
+        //$$ WorldEaterMineHelper.emitCustomBlockQuads(blockView, state, pos, MiscUtil.cast(randomSupplier), context);
         //#endif
     }
 }

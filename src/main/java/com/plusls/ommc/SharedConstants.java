@@ -1,7 +1,7 @@
 package com.plusls.ommc;
 
 import lombok.Getter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +33,7 @@ public class SharedConstants {
         return VersionUtil.translateVersionType(SharedConstants.modVersion);
     }
 
-    public static @NotNull ResourceLocation identifier(String path) {
+    public static @NotNull Identifier identifier(String path) {
         return ResourceLocationCompat.fromNamespaceAndPath(SharedConstants.getModIdentifier(), path);
     }
 

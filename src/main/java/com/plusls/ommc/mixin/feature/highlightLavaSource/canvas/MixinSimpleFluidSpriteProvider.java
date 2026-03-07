@@ -4,7 +4,7 @@ import com.plusls.ommc.game.Configs;
 import com.plusls.ommc.impl.feature.highlightLavaSource.LavaSourceResourceLoader;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -31,8 +31,8 @@ public abstract class MixinSimpleFluidSpriteProvider {
 
     @Dynamic
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void preInit(ResourceLocation stillSpriteName, ResourceLocation flowingSpriteName,
-                         ResourceLocation overlaySpriteName, CallbackInfo ci) {
+    private void preInit(Identifier stillSpriteName, Identifier flowingSpriteName,
+                         Identifier overlaySpriteName, CallbackInfo ci) {
         this.ommc$isLava = stillSpriteName.toString().equals("minecraft:block/lava_still");
     }
 

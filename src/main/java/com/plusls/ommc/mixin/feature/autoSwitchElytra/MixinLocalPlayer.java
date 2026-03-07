@@ -58,9 +58,9 @@ public abstract class MixinLocalPlayer extends AbstractClientPlayer {
             at = @At(
                     value = "INVOKE",
                     //#if MC>=12103
-                    //$$ target = "Lnet/minecraft/client/player/LocalPlayer;tryToStartFallFlying()Z"
+                    target = "Lnet/minecraft/client/player/LocalPlayer;tryToStartFallFlying()Z"
                     //#else
-                    target = "Lnet/minecraft/client/player/LocalPlayer;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;"
+                    //$$ target = "Lnet/minecraft/client/player/LocalPlayer;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;"
                     //#endif
             )
     )

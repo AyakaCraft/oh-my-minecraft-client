@@ -31,8 +31,8 @@ import top.hendrixshen.magiclib.api.compat.minecraft.world.item.ItemStackCompat;
 import java.util.*;
 
 //#if MC > 12005
-//$$ import net.minecraft.world.item.component.ItemContainerContents;
-//$$ import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.core.component.DataComponents;
 //#endif
 
 //#if MC > 11902
@@ -425,16 +425,16 @@ public class SortInventoryHelper {
             }
 
             //#if MC < 12005
-            CompoundTag tagA = a.getTag();
-            CompoundTag tagB = b.getTag();
+            //$$ CompoundTag tagA = a.getTag();
+            //$$ CompoundTag tagB = b.getTag();
             //#else
-            //$$ ItemContainerContents tagA = a.get(DataComponents.CONTAINER), tagB = b.get(DataComponents.CONTAINER);
+            ItemContainerContents tagA = a.get(DataComponents.CONTAINER), tagB = b.get(DataComponents.CONTAINER);
             //#endif
 
             if (ShulkerBoxItemHelper.isShulkerBoxBlockItem(a) && ShulkerBoxItemHelper.isShulkerBoxBlockItem(b) &&
                     a.getItem() == b.getItem()
                     //#if MC>=12005
-                    //$$ && tagA != null && tagB != null
+                    && tagA != null && tagB != null
                     //#endif
             ) {
                 return -ShulkerBoxItemHelper.compareShulkerBox(tagA, tagB);
@@ -502,9 +502,9 @@ public class SortInventoryHelper {
                 } else if (hasTag(a)) {
                     // 如果都有 nbt 的话，确保排序后相邻的物品 nbt 标签一致
                     //#if MC < 12005
-                    return Objects.compare(tagA, tagB, Comparator.comparingInt(CompoundTag::hashCode));
+                    //$$ return Objects.compare(tagA, tagB, Comparator.comparingInt(CompoundTag::hashCode));
                     //#else
-                    //$$ return Objects.compare(tagA, tagB, Comparator.comparingInt(ItemContainerContents::hashCode));
+                    return Objects.compare(tagA, tagB, Comparator.comparingInt(ItemContainerContents::hashCode));
                     //#endif
                 }
 
@@ -518,15 +518,15 @@ public class SortInventoryHelper {
 
     public static boolean hasTag(ItemStack itemStack) {
         //#if MC < 12005
-        return itemStack.hasTag();
+        //$$ return itemStack.hasTag();
         //#else
-        //$$ ItemContainerContents data = itemStack.get(DataComponents.CONTAINER);
-        //$$
-        //$$ if (data != null) {
-        //$$     return !itemStack.isEmpty() && !data.stream().toList().isEmpty();
-        //$$ }
-        //$$
-        //$$ return false;
+        ItemContainerContents data = itemStack.get(DataComponents.CONTAINER);
+
+        if (data != null) {
+            return !itemStack.isEmpty() && !data.stream().toList().isEmpty();
+        }
+
+        return false;
         //#endif
     }
 }

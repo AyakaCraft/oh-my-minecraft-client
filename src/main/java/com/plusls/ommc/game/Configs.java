@@ -169,11 +169,11 @@ public class Configs {
 
             if (cameraEntity != null && clientPlayerInteractionManager != null) {
                 //#if MC>=12100
-                //$$ HitResult hitResult = cameraEntity.pick(clientPlayerInteractionManager.getPlayerMode().isCreative() ? 5.0F : 4.5F, client.getFrameTimeNs(), false);
+                HitResult hitResult = cameraEntity.pick(clientPlayerInteractionManager.getPlayerMode().isCreative() ? 5.0F : 4.5F, client.getFrameTimeNs(), false);
                 //#elseif MC>=12005
                 //$$ HitResult hitResult = cameraEntity.pick(clientPlayerInteractionManager.hasInfiniteItems() ? 5.0F : 4.5F, client.getFrameTime(), false);
                 //#else
-                HitResult hitResult = cameraEntity.pick(clientPlayerInteractionManager.getPickRange(), client.getFrameTime(), false);
+                //$$ HitResult hitResult = cameraEntity.pick(clientPlayerInteractionManager.getPickRange(), client.getFrameTime(), false);
                 //#endif
 
                 if (hitResult.getType() == HitResult.Type.BLOCK) {

@@ -3,7 +3,7 @@ package com.plusls.ommc.mixin.feature.worldEaterMineHelper.sodium;
 import com.plusls.ommc.impl.feature.worldEaterMineHelper.BlockModelRendererContext;
 import com.plusls.ommc.impl.feature.worldEaterMineHelper.WorldEaterMineHelper;
 import com.plusls.ommc.mixin.accessor.AccessorBlockStateBase;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,7 +37,7 @@ public class MixinBlockRendererLegacy {
             //#if MC > 11605
             BlockPos origin,
             //#endif
-            BakedModel model,
+            BlockStateModel model,
             @Coerce Object buffers,
             boolean cull,
             long seed,
@@ -54,11 +54,11 @@ public class MixinBlockRendererLegacy {
             at = @At("HEAD"),
             ordinal = 0
     )
-    private BakedModel modifyBakedModel(BakedModel bakedModel) {
+    private BlockStateModel modifyBakedModel(BlockStateModel bakedModel) {
         BlockModelRendererContext context = this.ommc$renderContext.get();
 
         if (WorldEaterMineHelper.shouldUseCustomModel(context.state, context.pos)) {
-            BakedModel customModel = WorldEaterMineHelper.customFullModels.get(context.state.getBlock());
+            BlockStateModel customModel = WorldEaterMineHelper.customFullModels.get(context.state.getBlock());
 
             if (customModel != null) {
                 this.ommc$originalLuminance.set(((AccessorBlockStateBase) context.state).getLightEmission());
@@ -79,7 +79,7 @@ public class MixinBlockRendererLegacy {
             //#if MC > 11605
             BlockPos origin,
             //#endif
-            BakedModel model,
+            BlockStateModel model,
             @Coerce Object buffers,
             boolean cull,
             long seed,

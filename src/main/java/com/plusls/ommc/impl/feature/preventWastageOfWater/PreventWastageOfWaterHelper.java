@@ -9,7 +9,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 //#if MC>=12103
-//$$ import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResult;
 //#elseif MC <= 11404
 //$$ import net.minecraft.world.InteractionResult;
 //#endif
@@ -21,37 +21,37 @@ public class PreventWastageOfWaterHelper implements UseItemCallback {
     }
 
     //#if MC>=12103
-    //$$ @Override
-    //$$ public InteractionResult interact(Player player, Level world, InteractionHand hand) {
-    //$$     return (Configs.preventWastageOfWater.getBooleanValue()
-    //$$             //#if MC>=12109
-    //$$             //$$ && world.isClientSide()
-    //$$             //#else
-    //$$             && world.isClientSide
-    //$$             //#endif
-    //$$             && player.getItemInHand(hand).getItem() == Items.WATER_BUCKET
-    //$$             //#if MC>=12111
-    //$$             //$$ && world.environmentAttributes().getDimensionValue(net.minecraft.world.attribute.EnvironmentAttributes.WATER_EVAPORATES))
-    //$$             //#else
-    //$$             && world.dimensionType().ultraWarm())
-    //$$             //#endif
-    //$$             ? InteractionResult.FAIL
-    //$$             : InteractionResult.PASS;
-    //$$ }
-    //#elseif MC > 11404
     @Override
-    public net.minecraft.world.InteractionResultHolder<ItemStack> interact(Player player, Level world, InteractionHand hand) {
+    public InteractionResult interact(Player player, Level world, InteractionHand hand) {
         return (Configs.preventWastageOfWater.getBooleanValue()
-                && world.isClientSide
+                //#if MC>=12109
+                && world.isClientSide()
+                //#else
+                //$$ && world.isClientSide
+                //#endif
                 && player.getItemInHand(hand).getItem() == Items.WATER_BUCKET
+                //#if MC>=12111
+                && world.environmentAttributes().getDimensionValue(net.minecraft.world.attribute.EnvironmentAttributes.WATER_EVAPORATES))
+                //#else
+                //$$ && world.dimensionType().ultraWarm())
+                //#endif
+                ? InteractionResult.FAIL
+                : InteractionResult.PASS;
+    }
+    //#elseif MC > 11404
+    //$$ @Override
+    //$$ public net.minecraft.world.InteractionResultHolder<ItemStack> interact(Player player, Level world, InteractionHand hand) {
+    //$$     return (Configs.preventWastageOfWater.getBooleanValue()
+    //$$             && world.isClientSide
+    //$$             && player.getItemInHand(hand).getItem() == Items.WATER_BUCKET
                 //#if MC > 11502
-                && world.dimensionType().ultraWarm())
+                //$$ && world.dimensionType().ultraWarm())
                 //#else
                 //$$ && world.getDimension().isUltraWarm())
                 //#endif
-                ? net.minecraft.world.InteractionResultHolder.fail(ItemStack.EMPTY)
-                : net.minecraft.world.InteractionResultHolder.pass(ItemStack.EMPTY);
-    }
+    //$$             ? net.minecraft.world.InteractionResultHolder.fail(ItemStack.EMPTY)
+    //$$             : net.minecraft.world.InteractionResultHolder.pass(ItemStack.EMPTY);
+    //$$ }
     //#else
     //$$ @Override
     //$$ public InteractionResult interact(Player player, Level world, InteractionHand hand) {

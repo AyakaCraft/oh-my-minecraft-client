@@ -17,7 +17,7 @@ import top.hendrixshen.magiclib.api.compat.minecraft.network.chat.MutableCompone
 //#endif
 
 //#if MC >=12005
-//$$ import net.minecraft.client.GuiMessage;
+import net.minecraft.client.GuiMessage;
 //#endif
 
 @Mixin(value = ChatComponent.class, priority = 999)
@@ -32,12 +32,12 @@ public class MixinChatHud {
     )
     public void modifyMessage(
             //#if MC >= 12005
-            //$$ GuiMessage message,
+            GuiMessage message,
             //#else
-            Component message,
+            //$$ Component message,
             //#endif
             //#if MC > 11802 && MC < 12005
-            GuiMessageTag guiMessageTag,
+            //$$ GuiMessageTag guiMessageTag,
             //#elseif MC <=11802
             //$$ int messageId,
             //#endif
@@ -46,7 +46,7 @@ public class MixinChatHud {
         if (Configs.parseWaypointFromChat.getBooleanValue()) {
             HighlightWaypointHandler.getInstance().parseMessage(message
                     //#if MC > 12004
-                    //$$ .content()
+                    .content()
                     //#endif
             );
         }

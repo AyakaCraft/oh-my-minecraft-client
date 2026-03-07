@@ -30,11 +30,11 @@ public class AutoSwitchElytraHelper {
 
     public static boolean isChestArmor(ItemStack itemStack) {
         //#if MC>=12103
-        //$$ var slotGroup = fi.dy.masa.malilib.util.EquipmentUtils.getEquipmentSlot(itemStack);
-        //$$ return slotGroup != null && slotGroup.test(EquipmentSlot.CHEST) && !ItemStackCompat.of(itemStack).is(Items.ELYTRA);
+        var slotGroup = fi.dy.masa.malilib.util.EquipmentUtils.getEquipmentSlot(itemStack);
+        return slotGroup != null && slotGroup.test(EquipmentSlot.CHEST) && !ItemStackCompat.of(itemStack).is(Items.ELYTRA);
         //#else
-        return InventoryUtil.getEquipmentSlotForItem(itemStack) == EquipmentSlot.CHEST &&
-                !ItemStackCompat.of(itemStack).is(Items.ELYTRA);
+        //$$ return InventoryUtil.getEquipmentSlotForItem(itemStack) == EquipmentSlot.CHEST &&
+        //$$         !ItemStackCompat.of(itemStack).is(Items.ELYTRA);
         //#endif
     }
 
