@@ -3,7 +3,7 @@ plugins {
     id("top.hendrixshen.replace-token").version("${replace_token_version}")
 }
 
-apply(plugin: "net.fabricmc.fabric-loom-remap")
+apply(plugin: "net.fabricmc.fabric-loom")
 // apply(plugin: "dev.architectury.loom")
 apply(plugin: "com.replaymod.preprocess")
 apply(plugin: "me.fallenbreath.yamlang")
@@ -23,14 +23,8 @@ preprocess {
 }
 
 JavaVersion javaCompatibility
-if (mcVersion >= 12005) {
-    javaCompatibility = JavaVersion.VERSION_21
-} else if (mcVersion >= 11800) {
-    javaCompatibility = JavaVersion.VERSION_17
-} else if (mcVersion >= 11700) {
-    javaCompatibility = JavaVersion.VERSION_16
-} else {
-    javaCompatibility = JavaVersion.VERSION_1_8
+if (mcVersion >= 260100) {
+    javaCompatibility = JavaVersion.VERSION_25
 }
 
 repositories {
@@ -67,14 +61,13 @@ repositories {
 dependencies {
     // Development environment
     minecraft("com.mojang:minecraft:${project.property("dependencies.minecraft_version")}")
-    mappings(loom.layered {officialMojangMappings()})
 
     // Annotation processor
-    modCompileOnly("org.projectlombok:lombok:${project.property("dependencies.lombok_version")}")
+    compileOnly("org.projectlombok:lombok:${project.property("dependencies.lombok_version")}")
     annotationProcessor("org.projectlombok:lombok:${project.property("dependencies.lombok_version")}")
 
     // Dependency
-    modApi(annotationProcessor("top.hendrixshen.magiclib:magiclib-all-${project.name}:${project.property("dependencies.magiclib_version")}"))
+    api(annotationProcessor("top.hendrixshen.magiclib:magiclib-all-${project.name}:${project.property("dependencies.magiclib_version")}"))
 
     //switch (modPlatform) {
     //    case "fabric":
@@ -99,8 +92,6 @@ loom {
     //        mixinConfig("${project.parent.property("mod.id")}.mixins.json")
     //    }
     //}
-
-    mixin.useLegacyMixinAp = true
 
     runConfigs.configureEach {
         // Dump modified classes automatically.
@@ -218,16 +209,6 @@ java {
     withSourcesJar()
 }
 
-remapJar {
-    //if (forgeLike) {
-    //    if (modPlatform == "neoforge") {
-    //        atAccessWideners.add("${project.parent.property("mod.id")}.accesswidener")
-    //    }
-    //
-    //    exclude("${project.parent.property("mod.id")}.accesswidener")
-    //}
-}
-
 replaceToken {
     targetSourceSets.set([sourceSets.main])
     replace("@MOD_IDENTIFIER@", project.parent.property("mod.id").toString().replace("-", "_"))
@@ -330,16 +311,6 @@ tasks.withType(PublishToMavenRepository).configureEach {
 
 tasks.withType(JavaCompile).configureEach { JavaCompile task ->
     task.options.encoding = "UTF-8"
-
-    if (mcVersion > 12005) {
-        task.options.release.set(21)
-    } else if (mcVersion > 11701) {
-        task.options.release.set(17)
-    } else if (mcVersion > 11605) {
-        task.options.release.set(16)
-    } else {
-        task.options.release.set(8)
-    }
 }
 
 tasks.register("cleanRuns", DefaultTask.class) {

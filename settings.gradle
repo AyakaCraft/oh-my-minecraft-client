@@ -44,13 +44,13 @@ pluginManagement {
     }
 }
 
-Map<String, List<String>> settings = file("settings.json").withReader {
-    new JsonSlurper().parse(it) as Map<String, List<String>>
+Map<String, Map<String, Boolean>> settings = file("settings.json").withReader {
+    new JsonSlurper().parse(it) as Map<String, Map<String, Boolean>>
 }
 
-for (String version : settings.get("versions")) {
-    include(":$version")
-    ProjectDescriptor proj = project(":$version")
-    proj.setProjectDir(file("versions/$version"))
-    proj.setBuildFileName("../${settings.versions.get(0)}/build.gradle")
+for (Map.Entry<String, Boolean> version : settings.get("versions").entrySet()) {
+    include(":${version.key}")
+    ProjectDescriptor proj = project(":${version.key}")
+    proj.setProjectDir(file("versions/${version.key}"))
+    proj.setBuildFileName(version.value ? "../../common.gradle" : "../../common.remap.gradle")
 }

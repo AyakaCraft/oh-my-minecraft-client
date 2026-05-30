@@ -33,7 +33,12 @@ public class HighlightWaypointResourceLoader implements
 {
     private static final HighlightWaypointResourceLoader instance = new HighlightWaypointResourceLoader();
     private static final Identifier listenerId = SharedConstants.identifier("target_reload_listener");
-    public static final Identifier targetId = SharedConstants.identifier("block/target");
+
+    //#if MC>=12109
+    public static final Identifier targetId = SharedConstants.identifier("target");
+    //#else
+    //$$ public static final ResourceLocation targetId = SharedConstants.identifier("block/target");
+    //#endif
 
     public static TextureAtlasSprite targetIdSprite;
 
@@ -43,7 +48,9 @@ public class HighlightWaypointResourceLoader implements
         //$$         (atlasTexture, registry) -> registry.register(HighlightWaypointResourceLoader.targetId)
         //$$ );
         //#endif
-        //#if MC>=12109
+        //#if MC>=260100
+        //$$ ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(listenerId, HighlightWaypointResourceLoader.instance);
+        //#elseif MC>=12109
         ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(listenerId, HighlightWaypointResourceLoader.instance);
         //#else
         //$$ ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(HighlightWaypointResourceLoader.instance);
@@ -60,7 +67,7 @@ public class HighlightWaypointResourceLoader implements
     @Override
     public void onResourceManagerReload(ResourceManager manager) {
         //#if MC>=12109
-        targetIdSprite = Minecraft.getInstance().getAtlasManager().get(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, targetId));
+        targetIdSprite = Minecraft.getInstance().getAtlasManager().get(net.minecraft.client.renderer.Sheets.BLOCKS_MAPPER.apply(targetId));
         //#elseif MC > 11404
         //$$ targetIdSprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(targetId);
         //#else

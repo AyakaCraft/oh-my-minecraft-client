@@ -23,7 +23,11 @@ public class MixinClientPlayerInteractionManager {
 
     //#if MC > 11802
     @Inject(
+            //#if MC>=260100
+            //$$ method = "lambda$startDestroyBlock$1",
+            //#else
             method = "method_41930",
+            //#endif
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z",

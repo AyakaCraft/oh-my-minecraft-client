@@ -32,7 +32,7 @@
     "${mod_id}.mixins.json"
   ],
   "depends": {
-    "fabric": "*",
+    "fabric-api": "*",
     "magiclib": ">=${magiclib_dependency}",
     "malilib": "*",
     "minecraft": "${minecraft_dependency}"

@@ -481,8 +481,12 @@ public class SortInventoryHelper {
             }
 
             if (a.getItem() instanceof DyeItem && b.getItem() instanceof DyeItem) {
+                //#if MC>=260100
+                //$$ return SortInventoryHelper.DYE_COLOR_MAPPING.get(a.get(DataComponents.DYE)) - SortInventoryHelper.DYE_COLOR_MAPPING.get(b.get(DataComponents.DYE));
+                //#else
                 return SortInventoryHelper.DYE_COLOR_MAPPING.get(((DyeItem) a.getItem()).getDyeColor()) -
                         SortInventoryHelper.DYE_COLOR_MAPPING.get(((DyeItem) b.getItem()).getDyeColor());
+                //#endif
             }
 
             if (a.isEmpty() && !b.isEmpty()) {

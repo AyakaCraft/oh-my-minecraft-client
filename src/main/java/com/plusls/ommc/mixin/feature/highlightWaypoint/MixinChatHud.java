@@ -11,13 +11,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-//#if MC > 11802
-import net.minecraft.client.GuiMessageTag;
-import top.hendrixshen.magiclib.api.compat.minecraft.network.chat.MutableComponentCompat;
-//#endif
-
-//#if MC >=12005
+//#if MC >= 12005
 import net.minecraft.client.GuiMessage;
+//#elseif MC> 11802
+//$$ import net.minecraft.client.GuiMessageTag;
+//$$ import top.hendrixshen.magiclib.api.compat.minecraft.network.chat.MutableComponentCompat;
 //#endif
 
 @Mixin(value = ChatComponent.class, priority = 999)

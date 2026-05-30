@@ -6,9 +6,22 @@ import com.google.common.collect.Maps;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.plusls.ommc.impl.feature.worldEaterMineHelper.WorldEaterMineHelper;
-import net.minecraft.client.renderer.block.model.*;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.renderer.block.model.BlockElement;
+import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.client.renderer.block.model.BlockElementRotation;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
+import net.minecraft.client.renderer.block.model.SimpleUnbakedGeometry;
+import net.minecraft.client.renderer.block.model.SingleVariant;
+import net.minecraft.client.renderer.block.model.TextureSlots;
+import net.minecraft.client.renderer.block.model.Variant;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.QuadCollection;
+import net.minecraft.client.resources.model.ResolvedModel;
+import net.minecraft.client.resources.model.UnbakedGeometry;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -87,7 +100,11 @@ public class MixinSingleVariantUnbaked {
         }
 
         // OMMC part only model bake
-        TextureAtlasSprite textureAtlasSprite = resolvedModel.resolveParticleSprite(textureSlots, modelBaker);
+        //#if MC>=260100
+        //$$ var textureAtlasSprite = resolvedModel.resolveParticleMaterial(textureSlots, modelBaker);
+        //#else
+        var textureAtlasSprite = resolvedModel.resolveParticleSprite(textureSlots, modelBaker);
+        //#endif
         {
             QuadCollection quadCollection = SimpleUnbakedGeometry.bake(modelElements, textureSlots,
                     //#if MC>=12111

@@ -1,0 +1,26 @@
+net.fabricmc.fabric.api.client.command.v2.ClientCommandManager net.fabricmc.fabric.api.client.command.v2.ClientCommands
+net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource getWorld() getLevel()
+net.fabricmc.fabric.api.renderer.v1.model.FabricBlockStateModel net.fabricmc.fabric.api.client.renderer.v1.model.FabricBlockStateModel
+net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter
+net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainRenderContext net.fabricmc.fabric.impl.client.indigo.renderer.render.AltModelBlockRendererImpl
+net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainLikeRenderContext net.fabricmc.fabric.impl.client.indigo.renderer.render.AltModelBlockRendererImpl
+net.minecraft.client.GuiMessage net.minecraft.client.multiplayer.chat.GuiMessage
+net.minecraft.world.inventory.ClickType net.minecraft.world.inventory.ContainerInput
+net.minecraft.client.multiplayer.MultiPlayerGameMode handleInventoryMouseClick() handleContainerInput()
+net.minecraft.world.item.component.ItemContainerContents stream() allItemsCopyStream()
+net.minecraft.world.level.BlockAndTintGetter net.minecraft.client.renderer.block.BlockAndTintGetter
+net.minecraft.client.renderer.block.model.BlockStateModel net.minecraft.client.renderer.block.dispatch.BlockStateModel
+net.minecraft.client.renderer.block.model.BlockModel net.minecraft.client.resources.model.cuboid.CuboidModel
+net.minecraft.client.renderer.block.model.BlockElement net.minecraft.client.resources.model.cuboid.CuboidModelElement
+net.minecraft.client.renderer.block.model.BlockElementRotation net.minecraft.client.resources.model.cuboid.CuboidRotation
+net.minecraft.client.renderer.block.model.BlockElementFace net.minecraft.client.resources.model.cuboid.CuboidFace
+net.minecraft.client.renderer.block.model.SimpleUnbakedGeometry net.minecraft.client.resources.model.cuboid.UnbakedCuboidGeometry
+net.minecraft.client.renderer.block.model.SimpleModelWrapper net.minecraft.client.resources.model.SimpleModelWrapper
+net.minecraft.client.renderer.block.model.TextureSlots net.minecraft.client.resources.model.sprite.TextureSlots
+net.minecraft.client.renderer.block.model.Variant net.minecraft.client.renderer.block.dispatch.Variant
+net.minecraft.client.renderer.block.model.SingleVariant net.minecraft.client.renderer.block.dispatch.SingleVariant
+net.minecraft.client.resources.model.WeightedVariants net.minecraft.client.renderer.block.dispatch.WeightedVariants
+net.minecraft.client.resources.model.QuadCollection net.minecraft.client.resources.model.geometry.QuadCollection
+net.minecraft.client.resources.model.UnbakedGeometry net.minecraft.client.resources.model.geometry.UnbakedGeometry
+net.minecraft.client.resources.model.ModelState net.minecraft.client.renderer.block.dispatch.ModelState
+

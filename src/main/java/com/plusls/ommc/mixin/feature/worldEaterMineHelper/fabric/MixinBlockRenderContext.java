@@ -31,7 +31,9 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 public abstract class MixinBlockRenderContext {
 
     @WrapOperation(
-            //#if MC>=12105
+            //#if MC>=260100
+            //$$ method = "tesselateBlock",
+            //#elseif MC>=12105
             method = "bufferModel",
             //#elseif MC > 11404
             //$$ method = "render",
@@ -76,7 +78,13 @@ public abstract class MixinBlockRenderContext {
                 //#if MC>=12104
                 emitter,
                 //#endif
-                blockView, state, pos, supplier, renderContext);
+                blockView,
+                //#if MC>=12105
+                pos, state,
+                //#else
+                //$$ state, pos,
+                //#endif
+                supplier, renderContext);
         WorldEaterMineHelper.emitCustomBlockQuads(
                 //#if MC>=12104
                 emitter,
