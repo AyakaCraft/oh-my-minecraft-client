@@ -1,6 +1,8 @@
 package com.plusls.ommc;
 
 import lombok.Getter;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,17 +15,32 @@ import top.hendrixshen.magiclib.impl.malilib.config.GlobalConfigManager;
 import top.hendrixshen.magiclib.impl.malilib.config.MagicConfigHandlerImpl;
 import top.hendrixshen.magiclib.util.VersionUtil;
 
+import java.util.Optional;
+
 public class SharedConstants {
     @Getter
-    private static final String modIdentifier = "@MOD_IDENTIFIER@";
+    private static final String modIdentifier = "ommc";
     @Getter
-    private static final String modName = "@MOD_NAME@";
+    private static final String modName;
     @Getter
-    private static final String modVersion = "@MOD_VERSION@";
+    private static final String modVersion;
+
+    static {
+        final Optional<ModContainer> o = FabricLoader.getInstance().getModContainer(modIdentifier);
+        if (o.isPresent()) {
+            modName = o.get().getMetadata().getName();
+            modVersion = o.get().getMetadata().getVersion().toString();
+        } else {
+            modName = "Oh My Minecraft Client";
+            modVersion = "dev";
+        }
+    }
+
     @Getter
     private static final String modVersionType = VersionUtil.getVersionType(SharedConstants.modVersion);
     @Getter
-    private static final MagicConfigManager configManager = GlobalConfigManager.getConfigManager(SharedConstants.getModIdentifier());
+    private static final MagicConfigManager configManager = GlobalConfigManager.getConfigManager(SharedConstants.modIdentifier);
+
     @Getter
     private static final MagicConfigHandler configHandler = new MagicConfigHandlerImpl(configManager, 1);
     @Getter
@@ -34,7 +51,7 @@ public class SharedConstants {
     }
 
     public static @NotNull Identifier identifier(String path) {
-        return ResourceLocationCompat.fromNamespaceAndPath(SharedConstants.getModIdentifier(), path);
+        return ResourceLocationCompat.fromNamespaceAndPath(SharedConstants.modIdentifier, path);
     }
 
     public static String getTranslation(String path) {
