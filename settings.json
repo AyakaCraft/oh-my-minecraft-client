@@ -16,6 +16,7 @@
     "1.21.8-fabric": false,
     "1.21.10-fabric": false,
     "1.21.11-fabric": false,
-    "26.1.2-fabric": true
+    "26.1.2-fabric": true,
+    "26.2-fabric": true
   }
 }

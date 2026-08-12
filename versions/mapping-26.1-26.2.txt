@@ -1,0 +1,2 @@
+net.minecraft.util.Tuple com.plusls.ommc.util.Tuple
+net.minecraft.client.renderer.LevelRenderer allChanged() resetLevelRenderData()

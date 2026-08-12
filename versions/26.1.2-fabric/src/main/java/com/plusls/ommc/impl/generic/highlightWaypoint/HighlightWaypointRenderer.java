@@ -122,17 +122,9 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
 
         BeaconRenderer.submitBeaconBeam(
                 stack,
-                //#if MC>=12109
                 submitNodeStorage,
-                //#else
-                //$$ bufferBuilder,
-                //#endif
                 HighlightWaypointRenderer.BEAM_LOCATION,
-                //#if MC>=12109
                 1.0F, Math.floorMod(level.getGameTime(), 40) + partialTicks,
-                //#else
-                //$$ partialTicks, 1.0F, level.getGameTime(),
-                //#endif
                 bottomRelative,
                 2048,
                 0xFF0000,
@@ -140,18 +132,12 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                 0.25F
         );
 
-        //#if MC>=12109
         new net.minecraft.client.renderer.feature.CustomFeatureRenderer().renderSolid(submitNodeStorage.order(0), bufferBuilder);
         submitNodeStorage.endFrame();
-        //#endif
 
         bufferBuilder.endBatch();
 
         RenderGlobal.enableBlend();
-
-        //#if MC<12108
-        //$$ RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        //#endif
     }
 
     private void renderText(@NotNull PoseStack stack, String text) {
@@ -166,11 +152,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                     text,
                     (float) -halfTextWidth,
                     0.0F,
-                    //#if MC>=12108
                     0xFFFFFFFF,
-                    //#else
-                    //$$ 0xFFFFFF,
-                    //#endif
                     false,
                     stack.last().pose(),
                     immediate,

@@ -7,6 +7,7 @@ import com.plusls.ommc.api.sortInventory.IDyeBlock;
 import com.plusls.ommc.game.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorAbstractContainerScreen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -108,6 +109,14 @@ public class SortInventoryHelper {
         SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_PINK, 16);
     }
 
+    private static Screen getScreen(Minecraft client) {
+        //#if MC>=260200
+        //$$ return client.gui.screen();
+        //#else
+        return client.screen;
+        //#endif
+    }
+
     @Nullable
     public static Tuple<Integer, Integer> getSortRange(AbstractContainerMenu screenHandler, @NotNull Slot mouseSlot) {
         int mouseIdx = mouseSlot.index;
@@ -172,12 +181,12 @@ public class SortInventoryHelper {
     public static @Nullable Runnable sort() {
         Minecraft client = Minecraft.getInstance();
 
-        if (!(client.screen instanceof AbstractContainerScreen<?>) ||
-                client.screen instanceof CreativeModeInventoryScreen) {
+        if (!(getScreen(client) instanceof AbstractContainerScreen<?>) ||
+                getScreen(client) instanceof CreativeModeInventoryScreen) {
             return null;
         }
 
-        AbstractContainerScreen<?> handledScreen = (AbstractContainerScreen<?>) client.screen;
+        AbstractContainerScreen<?> handledScreen = (AbstractContainerScreen<?>) getScreen(client);
         //#if MC > 11404
         Window window = client.getWindow();
         //#else
