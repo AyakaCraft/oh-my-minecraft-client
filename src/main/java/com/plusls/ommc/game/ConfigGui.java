@@ -7,6 +7,8 @@ import top.hendrixshen.magiclib.api.i18n.I18n;
 import top.hendrixshen.magiclib.impl.malilib.config.gui.MagicConfigGui;
 import top.hendrixshen.magiclib.util.collect.ValueContainer;
 
+import java.util.Locale;
+
 public class ConfigGui extends MagicConfigGui {
     private static ConfigGui currentInstance = null;
 
@@ -33,6 +35,11 @@ public class ConfigGui extends MagicConfigGui {
     @Override
     public boolean isDebug() {
         return Configs.debug.getBooleanValue();
+    }
+
+    @Override
+    public String getModId() {
+        return super.getModId().toUpperCase(Locale.ROOT);
     }
 
     public static void openGui() {

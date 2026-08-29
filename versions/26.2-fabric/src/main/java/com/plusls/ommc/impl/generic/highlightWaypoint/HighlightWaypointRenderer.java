@@ -9,7 +9,6 @@ import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.plusls.ommc.mixin.accessor.AccessorRenderPipelines;
-import com.plusls.ommc.util.TextRenderer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +19,6 @@ import net.minecraft.client.renderer.StagedVertexBuffer;
 import net.minecraft.client.renderer.blockentity.state.BeaconRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +29,7 @@ import top.hendrixshen.magiclib.MagicLib;
 import top.hendrixshen.magiclib.api.compat.minecraft.resources.ResourceLocationCompat;
 import top.hendrixshen.magiclib.api.event.minecraft.render.RenderLevelListener;
 import top.hendrixshen.magiclib.api.render.context.LevelRenderContext;
+import top.hendrixshen.magiclib.impl.render.TextRenderer;
 import top.hendrixshen.magiclib.impl.render.context.RenderGlobal;
 import top.hendrixshen.magiclib.util.minecraft.PositionUtil;
 import top.hendrixshen.magiclib.util.minecraft.render.RenderUtil;
@@ -43,7 +42,6 @@ import java.util.OptionalDouble;
 public final class HighlightWaypointRenderer implements RenderLevelListener {
     @Getter
     private static final HighlightWaypointRenderer instance = new HighlightWaypointRenderer();
-    private static final Identifier BEAM_LOCATION = ResourceLocationCompat.withDefaultNamespace("textures/entity/beacon/beacon_beam.png");
 
     private static final   RenderPipeline WAYPOINT_ICON      = RenderPipeline.builder(AccessorRenderPipelines.getGuiTexturedSnipped())
             .withLocation(ResourceLocationCompat.fromNamespaceAndPath("ommc", "pipeline/waypoint_icon"))
