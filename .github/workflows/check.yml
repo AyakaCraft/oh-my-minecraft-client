@@ -39,7 +39,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build
-        run: ./gradlew clean buildAndGather --no-daemon --warning-mode all --stacktrace
+        run: ./gradlew clean buildAndGather --no-daemon --warning-mode all
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
