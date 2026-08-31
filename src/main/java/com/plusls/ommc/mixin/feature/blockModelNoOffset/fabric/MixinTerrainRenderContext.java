@@ -15,9 +15,8 @@ public abstract class MixinTerrainRenderContext {
 
     @WrapWithCondition(
             method = {
-                    "bufferModel", // 1.21.5+
-                    "tessellateBlock", // For fabric-renderer-indigo 0.5.0 and above
-                    "tesselateBlock" // For fabric-renderer-indigo 0.5.0 below
+                    "bufferModel",
+                    "tessellateBlock"
             },
             at = @At(
                     value = "INVOKE",

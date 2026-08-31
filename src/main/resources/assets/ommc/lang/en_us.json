@@ -76,13 +76,11 @@
   "ommc.config.option.highlightEntityListType.comment": "highlightEntityListType",
   "ommc.config.option.highlightEntityWhiteList.name": "highlightEntityWhiteList",
   "ommc.config.option.highlightEntityWhiteList.comment": "highlightEntityWhiteList",
-  "ommc.config.option.breakBlockBlackList.name": "breakBlockBlackList",
-  "ommc.config.option.breakBlockBlackList.comment": "If §6disableBreakScaffolding§r is enabled, you can't break blocks in §6breakBlockBlackList§r.",
-  "ommc.config.option.breakScaffoldingWhiteList.name": "breakScaffoldingWhiteList",
-  "ommc.config.option.breakScaffoldingWhiteList.comment": "If §6disableBreakScaffolding§r is enabled, you can only break scaffolding with the items in §6breakScaffoldingWhiteList§r.",
   "ommc.config.option.moveDownInScaffoldingWhiteList.name": "moveDownInScaffoldingWhiteList",
   "ommc.config.option.moveDownInScaffoldingWhiteList.comment": "If §6disableMoveDownInScaffolding§r is enabled, you can only move down scaffolding with the items inside §6moveDownInScaffoldingWhiteList§r in your hand.",
   "ommc.config.option.worldEaterMineHelperWhitelist.name": "worldEaterMineHelperWhitelist",
   "ommc.config.option.worldEaterMineHelperWhitelist.comment": "If §6worldEaterMineHelper§r is enabled, when the blocks in §6worldEaterMineHelperWhitelist§r are exposed to the air, the game will render a mirror image above them, which is convenient for world eater maintenance and mining.",
+  "ommc.config.option.englishSearch.name": "englishSearch",
+  "ommc.config.option.englishSearch.comment": "Enables searching in English in creative inventory.",
   "ommc.highlight_waypoint.tooltip": "Click to highlight waypoint. Click again to display the beam."
 }

@@ -84,5 +84,7 @@
   "ommc.config.option.moveDownInScaffoldingWhiteList.comment": "如果开启 §6禁止在脚手架中下降§r，玩家手中拿着 §6在脚手架中下降白名单§r 中的物品时才能在脚手架下降",
   "ommc.config.option.worldEaterMineHelperWhitelist.name": "世吞挖矿助手白名单",
   "ommc.config.option.worldEaterMineHelperWhitelist.comment": "如果开启 §6世吞挖矿助手白名单§r，当 §6世吞挖矿助手白名单§r 中的方块暴露在空气中时，客户端会在它们上方渲染出自己的镜像，方便世吞运维以及挖矿",
+  "ommc.config.option.englishSearch.name": "英语搜索",
+  "ommc.config.option.englishSearch.comment": "在创造模式物品栏中启用英文搜索",
   "ommc.highlight_waypoint.tooltip": "点击以高亮坐标点。再次点击展示光束。"
 }
