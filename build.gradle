@@ -7,6 +7,7 @@ plugins {
     id("org.ajoberstar.grgit").version("${grgit_version}")
     id("com.replaymod.preprocess").version("${preprocessor_version}")
     id("me.fallenbreath.yamlang").version("${yamlang_version}").apply(false)
+    id("com.hypherionmc.modutils.modpublisher").version("${modpublisher_version}").apply(false)
 }
 
 preprocess {
@@ -71,77 +72,6 @@ ext {
         String value
         (value = project.findProperty(key)) && !value.isEmpty() ? value : defaultValue
     }
-
-    isGithubCI = {
-        return env.get("GITHUB_ACTION") != null
-    }
-
-    isJitpack = {
-        return env.get("JITPACK") != null
-    }
-
-    getBuildNumber = {
-        return env.GITHUB_RUN_NUMBER ? env.GITHUB_RUN_NUMBER : 0
-    }
-
-    getVersionGit = { List paths ->
-        if (grgit == null || grgit.head() == null) {
-            return "nogit"
-        }
-
-        List latestCommits = paths.isEmpty() ? grgit.log(maxCommits: 1) : grgit.log(paths: paths, maxCommits: 1)
-        return latestCommits.isEmpty() ? "uncommited" : "${latestCommits.get(0).id.substring(0, 7)}"
-    }
-
-    getVersionType = {
-        String type = getOrDefault("ow.build.environment.buildType", null)
-
-        if (type != null) {
-            return type
-        }
-
-        if (isJitpack()) {
-            return "jitpack"
-        }
-
-        type = env.BUILD_TYPE
-
-        switch (type) {
-            case "RELEASE":
-                return "stable"
-            case "BETA":
-                return "beta"
-            case "PULL_REQUEST":
-                return "pull_request"
-            default:
-                return "dev"
-        }
-    }
-
-    getVersionPatch = { List paths ->
-        if (grgit == null || grgit.head() == null) {
-            return 0
-        }
-
-        List latestCommits = paths.isEmpty() ? grgit.log() : grgit.log(paths: paths)
-        return latestCommits.size()
-    }
-
-    getVersion = { Project proj ->
-        return "${proj.property("mod.version")}.${getVersionPatch(proj == rootProject ? [] : [proj.projectDir.name])}"
-    }
-
-    getVersionWithCommitHash = { Project proj ->
-        return "${getVersion(proj)}+${getVersionGit(proj == rootProject ? [] : [proj.projectDir.name])}-${getVersionType()}"
-    }
-
-    getModVersion = { Project proj ->
-        return "${getVersion(proj)}-${getVersionType()}"
-    }
-
-    getMavenArtifactVersion = { Project proj ->
-        return project.getVersionType() == "stable" ? "${getVersion(proj)}" : "${getModVersion(proj)}"
-    }
 }
 
 tasks.register("genLocalProperties") {
@@ -180,6 +110,27 @@ tasks.register("cleanPreprocessSources") {
         subprojects {
             def path = project.projectDir.toPath().resolve("build/preprocessed")
             path.toFile().deleteDir()
+        }
+    }
+}
+
+tasks.register("buildAndGather") {
+    subprojects {
+        dependsOn(tasks.build)
+    }
+    doLast {
+        println("Gathering builds")
+
+        delete(fileTree(rootProject.layout.buildDirectory.dir("libs").get()) { include("*") })
+        subprojects {
+            print("Copying files for ${name} version ${version}...    ")
+            var currentLibsDir = it.layout.buildDirectory.dir("libs").get()
+            copy {
+                from(currentLibsDir) { include("*-${version}.jar") }
+                into(rootProject.layout.buildDirectory.dir("libs").get())
+                duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            }
+            println("Succeeded")
         }
     }
 }

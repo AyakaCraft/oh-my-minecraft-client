@@ -30,6 +30,10 @@ pluginManagement {
             name = "Jitpack"
             url = "https://jitpack.io"
         }
+
+        maven {
+            url = "https://maven.firstdark.dev/releases"
+        }
     }
 
     resolutionStrategy {

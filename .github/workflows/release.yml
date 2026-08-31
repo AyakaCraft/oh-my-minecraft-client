@@ -1,0 +1,45 @@
+name: Build & Publish
+
+on:
+  push:
+    tags:
+      - v*.*.*
+      - v*.*.*.*
+
+env:
+  JAVA_VERSION: 25
+  BUILD_RELEASE: "true"
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  REPO: ${{ github.repository }}
+  REPO_URL: "${{ github.server_url }}/${{ github.repository }}"
+  TAG: ${{ github.ref_name }}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Environment Variables
+        run: env
+
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'zulu'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: true
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: Build and Publish
+        run: ./gradlew clean build publishGitHub --no-daemon --warning-mode all --stacktrace
