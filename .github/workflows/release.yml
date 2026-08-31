@@ -42,4 +42,4 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build and Publish
-        run: ./gradlew clean build publishGitHub --no-daemon --warning-mode all --stacktrace
+        run: ./gradlew clean build publishGitHub --no-daemon --warning-mode all
