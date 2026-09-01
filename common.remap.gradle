@@ -203,6 +203,14 @@ loom {
 }
 
 var modVersion = property("mod.version").toString()
+var modVersionType = hasProperty("mod.version.type") ? switch (property("mod.version.type").toString().toLowerCase(Locale.ROOT)) {
+    case "beta" -> "beta"
+    case "alpha" -> "alpha"
+    default -> "release"
+} : "release"
+if (modVersionType != "release") {
+    modVersion += "-" + modVersionType
+}
 
 var archivesBaseName = property("mod.archives_base_name").toString()
 var modVersionSuffix = ""

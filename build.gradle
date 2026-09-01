@@ -4,7 +4,7 @@ plugins {
     id("net.fabricmc.fabric-loom-remap").version("${loom_version}").apply(false)
     id("net.fabricmc.fabric-loom").version("${loom_version}").apply(false)
     //id("dev.architectury.loom").version("${loom_version}").apply(false)
-    id("org.ajoberstar.grgit").version("${grgit_version}")
+    //id("org.ajoberstar.grgit").version("${grgit_version}")
     id("com.replaymod.preprocess").version("${preprocessor_version}")
     id("me.fallenbreath.yamlang").version("${yamlang_version}").apply(false)
     id("com.hypherionmc.modutils.modpublisher").version("${modpublisher_version}").apply(false)
