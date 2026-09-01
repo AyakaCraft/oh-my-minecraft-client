@@ -42,4 +42,9 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build and Publish
-        run: ./gradlew clean build publishGitHub --no-daemon --warning-mode all
+        run: ./gradlew clean buildAndGather publishGitHub --no-daemon --warning-mode all
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: build/libs/
