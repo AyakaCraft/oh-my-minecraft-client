@@ -1,6 +1,6 @@
 package com.plusls.ommc.mixin.feature.worldEaterMineHelper;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.plusls.ommc.impl.feature.worldEaterMineHelper.WorldEaterMineHelper;
 import com.plusls.ommc.mixin.accessor.AccessorBlockModel;
@@ -104,7 +104,7 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         BlockModel model = MiscUtil.cast(this);
         this.ommc$bakeTag.set(false);
         List<BlockElement> originalModelElements       = this.getElements();
-        List<BlockElement> originalModelElementsBackup = Lists.newArrayList(originalModelElements);
+        List<BlockElement> originalModelElementsBackup = ImmutableList.copyOf(originalModelElements);
         originalModelElements.clear();
 
         for (BlockElement modelElement : originalModelElementsBackup) {

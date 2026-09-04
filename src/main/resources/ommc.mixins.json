@@ -46,7 +46,6 @@
     "feature.preventIntentionalGameDesign.MixinClientPlayerInteractionManager",
     "feature.removeBreakCooldown.MixinClientPlayerInteractionManager",
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
-    "feature.worldEaterMineHelper.MixinModelBakerImpl",
     "feature.worldEaterMineHelper.MixinSingleVariantUnbaked",
     "feature.worldEaterMineHelper.fabric.MixinBlockRenderContext",
     "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext",
