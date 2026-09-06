@@ -6,6 +6,7 @@ import com.plusls.ommc.impl.feature.englishSearch.EnglishSearchHelper;
 import com.plusls.ommc.impl.feature.sortInventory.SortInventoryShulkerBoxLastType;
 import com.plusls.ommc.impl.feature.sortInventory.SortInventoryHelper;
 import com.plusls.ommc.impl.generic.highlightWaypoint.HighlightWaypointHandler;
+import fi.dy.masa.malilib.config.options.ConfigBase;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
@@ -160,8 +161,8 @@ public class Configs {
         SharedConstants.getConfigHandler().setPostDeserializeCallback(Configs::onConfigLoaded);
 
         // Generic
-        IValueChangeCallback<ConfigBoolean> reloadLevelRender = (option) -> Minecraft.getInstance().levelRenderer.allChanged();
-        IValueChangeCallback<ConfigOptionList> reloadLevelRenderList = (option) -> Minecraft.getInstance().levelRenderer.allChanged();
+        IValueChangeCallback<ConfigBoolean> reloadLevelRender = Configs::rerenderLevel;
+        IValueChangeCallback<ConfigOptionList> reloadLevelRenderList = Configs::rerenderLevel;
 
         MagicConfigManager.setHotkeyCallback(Configs.clearWaypoint, () -> HighlightWaypointHandler.getInstance().clearHighlightPos(), true);
         MagicConfigManager.setHotkeyCallback(Configs.openConfigGui, ConfigGui::openGui, true);
@@ -206,6 +207,14 @@ public class Configs {
 
     private static void onConfigLoaded(MagicConfigHandler magicConfigHandler) {
         Configs.sortInventory.getKeybind().setSettings(KeybindSettings.GUI);
+    }
+
+    private static void rerenderLevel(ConfigBase<?> option) {
+        //#if MC>=260200
+        //$$ Minecraft.getInstance().levelExtractor.allChanged();
+        //#else
+        Minecraft.getInstance().levelRenderer.allChanged();
+        //#endif
     }
 
     public static class ConfigCategory {
