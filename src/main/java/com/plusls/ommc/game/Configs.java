@@ -44,9 +44,6 @@ public class Configs {
     @Config(category = ConfigCategory.GENERIC)
     public static MagicConfigBoolean dontClearChatHistory = factory.newConfigBoolean("dontClearChatHistory", false);
 
-    @Config(category = ConfigCategory.FEATURE)
-    public static MagicConfigBoolean englishSearch = factory.newConfigBoolean("englishSearch", false);
-
     @Config(category = ConfigCategory.GENERIC)
     public static MagicConfigBooleanHotkeyed forceParseWaypointFromChat = factory.newConfigBooleanHotkeyed("forceParseWaypointFromChat", false);
 
@@ -94,6 +91,9 @@ public class Configs {
 
     @Config(category = ConfigCategory.FEATURE)
     public static MagicConfigBooleanHotkeyed disablePistonPushEntity = factory.newConfigBooleanHotkeyed("disablePistonPushEntity", false);
+
+    @Config(category = ConfigCategory.FEATURE)
+    public static MagicConfigBoolean englishSearch = factory.newConfigBoolean("englishSearch", false);
 
     @Config(category = ConfigCategory.FEATURE)
     public static MagicConfigBooleanHotkeyed flatDigger = factory.newConfigBooleanHotkeyed("flatDigger", false);

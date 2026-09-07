@@ -1,0 +1,131 @@
+ommc:
+  gui:
+    title:
+      configs: 'Oh My Minecraft Client - Config - Version: %s'
+  config:
+    category:
+      all:
+        name: All
+      generic:
+        name: Generic
+      feature:
+        name: Feature
+      list:
+        name: List
+    option:
+      autoSwitchElytra:
+        name: autoSwitchElytra
+        comment: Auto switch elytra and chestplate.
+      betterSneaking:
+        name: betterSneaking
+        comment: Player can move down 1 height when sneaking.
+      blockModelNoOffsetBlacklist:
+        name: blockModelNoOffsetBlacklist
+        comment: blockModelNoOffsetBlacklist
+      blockModelNoOffsetListType:
+        name: blockModelNoOffsetListType
+        comment: blockModelNoOffsetListType
+      blockModelNoOffsetWhitelist:
+        name: blockModelNoOffsetWhitelist
+        comment: blockModelNoOffsetWhitelist
+      clearWaypoint:
+        name: clearWaypoint
+        comment: A hotkey to clear highlight waypoint.
+      debug:
+        name: debug
+        comment: Display debug message.
+      disableBlocklistCheck:
+        name: disableBlocklistCheck
+        comment: Workaround for MC-218167, prevent network request from blocking the Render Thread.
+      disableBreakBlock:
+        name: disableBreakBlock
+        comment: You can't break blocks in §6breakBlockBlackList§r.
+      disableBreakScaffolding:
+        name: disableBreakScaffolding
+        comment: You can only break scaffolding with the items in §6breakScaffoldingWhiteList§r.
+      disableMoveDownInScaffolding:
+        name: disableMoveDownInScaffolding
+        comment: You can only move down scaffolding with the items inside §6moveDownInScaffoldingWhiteList§r in your hand.
+      disablePistonPushEntity:
+        name: disablePistonPushEntity
+        comment: Prevent piston push entities (except the player) to reduce piston lag (such as the carpet duper), it will cause entities pos error when entity push by piston.
+      dontClearChatHistory:
+        name: dontClearChatHistory
+        comment: Don't clear chat history and input history.
+      englishSearch:
+        name: englishSearch
+        comment: Enables searching in English in recipe book and creative inventory.
+      flatDigger:
+        name: flatDigger
+        comment: Which allowed you mine a flat road while digging stone by preventing digging of blocks under your feet while standing，sneak to dig blocks under you.
+      forceBreakingCooldown:
+        name: forceBreakingCooldown
+        comment: You will have 5gt cooldown after instant breaking.
+      forceParseWaypointFromChat:
+        name: forceParseWaypointFromChat
+        comment: Force parse waypoint from chat (such it will override the clickevent of rtext).
+      highlightBeamTime:
+        name: highlightBeamTime
+        comment: Highlighted waypoint beam display time.
+      highlightEntityBlackList:
+        name: highlightEntityBlackList
+        comment: highlightEntityBlackList
+      highlightEntityListType:
+        name: highlightEntityListType
+        comment: highlightEntityListType
+      highlightEntityWhiteList:
+        name: highlightEntityWhiteList
+        comment: highlightEntityWhiteList
+      highlightLavaSource:
+        name: highlightLavaSource
+        comment: Highlight lava sources.
+      highlightPersistentMob:
+        name: highlightPersistentMob
+        comment: Highlight persistent mobs (Mob have item in hand or mob have custom name).
+      highlightPersistentMobClientMode:
+        name: highlightPersistentMobClientMode
+        comment: 'Use client data to check persistent mob, such as hand item, custom name. Tips: in local game should disable this option, in server also can use syncAllEntityData in MasaGadget to sync entity data to local.'
+      moveDownInScaffoldingWhiteList:
+        name: moveDownInScaffoldingWhiteList
+        comment: If §6disableMoveDownInScaffolding§r is enabled, you can only move down scaffolding with the items inside §6moveDownInScaffoldingWhiteList§r in your hand.
+      openConfigGui:
+        name: openConfigGui
+        comment: A hotkey to open the in-game Config GUI.
+      parseWaypointFromChat:
+        name: parseWaypointFromChat
+        comment: Parse waypoint from chat.
+      preventIntentionalGameDesign:
+        name: preventIntentionalGameDesign
+        comment: Prevent Intentional Game Design (Bed and Respawn Anchor).
+      preventWastageOfWater:
+        name: preventWastageOfWater
+        comment: Prevent water bucket from vanishing in nether.
+      realSneaking:
+        name: realSneaking
+        comment: You cannot ascend or descend non-full blocks when sneaking, e.g. carpets.
+      removeBreakingCooldown:
+        name: removeBreakingCooldown
+        comment: Remove cooldown after break block (default is 5gt), it will not work when enable §6forceBreakingCooldown§r.
+      sendLookingAtBlockPos:
+        name: sendLookingAtPos
+        comment: A hotkey to send looking at pos.
+      sortInventory:
+        name: sortInventory
+        comment: A hotkey to sort inventory.
+      sortInventoryShulkerBoxLast:
+        auto: Auto
+        disable: Disable
+        enable: Enable
+        name: sortInventoryShulkerBoxLast
+        comment: Sort inventory shulker box last.
+      sortInventorySupportEmptyShulkerBoxStack:
+        name: sortInventorySupportEmptyShulkerBoxStack
+        comment: Support empty shulker box stack when sort inventory.
+      worldEaterMineHelper:
+        name: worldEaterMineHelper
+        comment: When the blocks in §6worldEaterMineHelperWhitelist§r are exposed to the air, the game will render a mirror image above them, which is convenient for world eater maintenance and mining.
+      worldEaterMineHelperWhitelist:
+        name: worldEaterMineHelperWhitelist
+        comment: If §6worldEaterMineHelper§r is enabled, when the blocks in §6worldEaterMineHelperWhitelist§r are exposed to the air, the game will render a mirror image above them, which is convenient for world eater maintenance and mining.
+  highlight_waypoint:
+    tooltip: Click to highlight waypoint. Click again to display the beam.
