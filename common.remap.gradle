@@ -37,6 +37,8 @@ boolean jitpack = System.getenv("JITPACK") == "true"
 boolean releasing = System.getenv("BUILD_RELEASE") == "true"
 boolean ci = jitpack || releasing
 
+String modId = property("mod.id")
+
 repositories {
     mavenLocal()
 
@@ -70,24 +72,24 @@ repositories {
 
 dependencies {
     // Development environment
-    minecraft("com.mojang:minecraft:${project.property("dependencies.minecraft_version")}")
+    minecraft("com.mojang:minecraft:${property("dependencies.minecraft_version")}")
     mappings(loom.layered {officialMojangMappings()})
 
     // Annotation processor
-    modCompileOnly("org.projectlombok:lombok:${project.property("dependencies.lombok_version")}")
-    annotationProcessor("org.projectlombok:lombok:${project.property("dependencies.lombok_version")}")
+    modCompileOnly("org.projectlombok:lombok:${property("dependencies.lombok_version")}")
+    annotationProcessor("org.projectlombok:lombok:${property("dependencies.lombok_version")}")
 
     // Dependency
-    modApi(annotationProcessor("top.hendrixshen.magiclib:magiclib-all-${project.name}:${project.property("dependencies.magiclib_version")}"))
+    modApi(annotationProcessor("top.hendrixshen.magiclib:magiclib-all-${name}:${property("dependencies.magiclib_version")}"))
 
     //switch (modPlatform) {
     //    case "fabric":
     //        break
     //    case "forge":
-    //        forge("net.minecraftforge:forge:${project.property("dependencies.minecraft_version")}-${project.property("dependencies.forge_version")}")
+    //        forge("net.minecraftforge:forge:${property("dependencies.minecraft_version")}-${property("dependencies.forge_version")}")
     //        break
     //    case "neoforge":
-    //        neoForge("net.neoforged:neoforge:${project.property("dependencies.neoforge_version")}")
+    //        neoForge("net.neoforged:neoforge:${property("dependencies.neoforge_version")}")
     //        break
     //}
 }
@@ -95,12 +97,12 @@ dependencies {
 loom {
     //silentMojangMappingsLicense()
 
-    // accessWidenerPath.set(file("src/main/resources/${project.parent.property("mod.id")}.accesswidener"))
+    // accessWidenerPath.set(file("src/main/resources/${property("mod.id")}.accesswidener"))
 
     //if (modPlatform == "forge") {
     //    forge {
     //        convertAccessWideners.set(true)
-    //        mixinConfig("${project.parent.property("mod.id")}.mixins.json")
+    //        mixinConfig("${property("mod.id")}.mixins.json")
     //    }
     //}
 
@@ -113,12 +115,9 @@ loom {
 
     runConfigs.named("client") {
         programArgs([
-                "--width",
-                project.getOrDefault("ow.game.window.width", "1920"),
-                "--height",
-                project.getOrDefault("ow.game.window.height", "1080"),
-                "--username",
-                project.getOrDefault("ow.game.window.username", "dev")
+                "--width", "1920",
+                "--height", "1080",
+                "--username", "dev"
         ])
         vmArgs("-Dmagiclib.debug=true")
         vmArgs("-Dmagiclib.dev.qol=true")
@@ -236,13 +235,13 @@ var fullArtifactVersion
 
 if (jitpack) {
     // move mc version into archivesBaseName, so jitpack will be able to organize archives from multiple subprojects correctly
-    base.archivesName = "${archivesBaseName}-mc${project.name}"
+    base.archivesName = "${archivesBaseName}-mc${name}"
     fullProjectVersion = "v${modVersion}${modVersionSuffix}"
     fullArtifactVersion = artifactVersion + artifactVersionSuffix
 } else {
     base.archivesName = archivesBaseName
-    fullProjectVersion = "v${modVersion}-mc${project.name}${modVersionSuffix}"
-    fullArtifactVersion = "${modVersion}-mc${project.name}${artifactVersionSuffix}"
+    fullProjectVersion = "v${modVersion}-mc${name}${modVersionSuffix}"
+    fullArtifactVersion = "${modVersion}-mc${name}${artifactVersionSuffix}"
 }
 version = fullProjectVersion
 
@@ -265,12 +264,27 @@ java {
 remapJar {
     //if (forgeLike) {
     //    if (modPlatform == "neoforge") {
-    //        atAccessWideners.add("${project.parent.property("mod.id")}.accesswidener")
+    //        atAccessWideners.add("${property("mod.id")}.accesswidener")
     //    }
     //
-    //    exclude("${project.parent.property("mod.id")}.accesswidener")
+    //    exclude("${property("mod.id")}.accesswidener")
     //}
 }
+
+String mixinFilePath = "${modId}.mixins.json"
+
+var modMeta = [
+        "magiclib_dependency" : property("dependencies.magiclib_dependency"),
+        "minecraft_dependency": property("dependencies.minecraft_dependency"),
+        "mod_alias"           : modId,
+        "mod_description"     : property("mod.description"),
+        "mod_homepage"        : property("mod.homepage"),
+        "mod_id"              : modId,
+        "mod_license"         : property("mod.license"),
+        "mod_name"            : property("mod.name"),
+        "mod_sources"         : property("mod.sources"),
+        "mod_version"         : fullModVersion
+]
 
 processResources {
     outputs.upToDateWhen { false }
@@ -283,41 +297,30 @@ processResources {
     ].forEach { file, platforms ->
         if (platforms.contains(modPlatform)) {
             filesMatching(file) {
-                expand([
-                        "magiclib_dependency" : project.property("dependencies.magiclib_dependency"),
-                        "minecraft_dependency": project.property("dependencies.minecraft_dependency"),
-                        "mod_alias"           : project.parent.property("mod.id"),
-                        "mod_description"     : project.parent.property("mod.description"),
-                        "mod_homepage"        : project.parent.property("mod.homepage"),
-                        "mod_id"              : project.parent.property("mod.id"),
-                        "mod_license"         : project.parent.property("mod.license"),
-                        "mod_name"            : project.parent.property("mod.name"),
-                        "mod_sources"         : project.parent.property("mod.sources"),
-                        "mod_version"         : fullModVersion
-                ])
+                expand(modMeta)
             }
         } else {
             exclude(file)
         }
     }
 
-    filesMatching("${project.parent.property("mod.id")}.mixins.json") {
+    filesMatching(mixinFilePath) {
         expand([
                 "MIXIN_COMPATIBILITY_LEVEL": "JAVA_${javaCompatibility.majorVersion}"
         ])
     }
 
-    from("${rootDir}/LICENSE")
-    from("${rootDir}/icon.png") {
+    from(rootProject.file("LICENSE"))
+    from(rootProject.file("icon.png")) {
         //if (fabricLike) {
-            into("assets/${project.parent.property("mod.id")}")
+            into("assets/${modId}")
         //}
     }
 }
 
 yamlang {
     targetSourceSets.set([sourceSets.main])
-    inputDir.set("assets/${project.parent.property("mod.id")}/lang")
+    inputDir.set("assets/${modId}/lang")
 }
 
 tasks.withType(PublishToMavenRepository).configureEach {
@@ -363,7 +366,7 @@ tasks.register("cleanRunServer", DefaultTask.class) {
 ].forEach { taskName ->
     if (tasks.getNames().contains(taskName)) {
         tasks.named(taskName) {
-            it.group = "${project.property("mod.id")}"
+            it.group = "${modId}"
         }
     }
 }
