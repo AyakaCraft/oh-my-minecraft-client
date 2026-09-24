@@ -56,5 +56,5 @@ for (Map.Entry<String, Boolean> version : settings.get("versions").entrySet()) {
     include(":${version.key}")
     ProjectDescriptor proj = project(":${version.key}")
     proj.setProjectDir(file("versions/${version.key}"))
-    proj.setBuildFileName(version.value ? "../../common.gradle" : "../../common.remap.gradle")
+    proj.setBuildFileName(version.value ? "../../common.gradle.kts" : "../../common.remap.gradle.kts")
 }
