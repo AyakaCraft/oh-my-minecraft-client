@@ -129,7 +129,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         //$$ GlStateManager.rotatef(entityRenderDispatcher.playerRotX, 1.0F, 0.0F, 0.0F);
         //#endif
 
-        float scale = (float) ((renderDistance > 8 ? renderDistance - 8 : 0) * 0.2 + 1) * 0.0265F;
+        float scale = (float) ((renderDistance > 8 ? renderDistance - 8 : 0) * 0.2 + 1) * 0.04F;
         ctx.scale(RenderUtil.getSizeScalingXSign() * scale, -scale, -scale);
 
         ctx.pushMatrix();

@@ -1,0 +1,8 @@
+com.mojang.blaze3d.pipeline.RenderTarget com.mojang.blaze3d.pipeline.RenderTarget
+com.mojang.blaze3d.pipeline com.mojang.renderpearl.api.pipeline
+com.mojang.blaze3d.systems.RenderPass com.mojang.renderpearl.api.commands.RenderPass
+com.mojang.blaze3d.buffers.GpuBufferSlice com.mojang.renderpearl.api.buffers.GpuBufferSlice
+com.mojang.blaze3d.platform.CompareOp com.mojang.renderpearl.api.pipeline.CompareOp
+net.minecraft.world.item.component.ItemContainerContents allItemsCopyStream() itemCopies()
+net.minecraft.world.attribute.BedRule explodes() destroyOnUse()
+net.minecraft.client.resources.model.cuboid.CuboidModelElement shade() shadeDirectionOverride()

@@ -29,6 +29,7 @@ preprocess {
 
     val mc2601_fabric = createNode("26.1.2-fabric", 26_01_00, "")
     val mc2602_fabric = createNode("26.2-fabric", 26_02_00, "")
+    val mc2603_fabric = createNode("26.3-fabric", 26_03_00, "")
 
     mc11404_fabric.link(mc11502_fabric, null)
     mc11502_fabric.link(mc11605_fabric, file("versions/mapping-1.15.2-1.16.5.txt"))
@@ -47,7 +48,7 @@ preprocess {
 
     mc12111_fabric.link(mc2601_fabric, file("versions/mapping-1.21.11-26.1.txt"))
     mc2601_fabric.link(mc2602_fabric, file("versions/mapping-26.1-26.2.txt"))
-
+    mc2602_fabric.link(mc2603_fabric, file("versions/mapping-26.2-26.3.txt"))
     strictExtraMappings = false
 }
 

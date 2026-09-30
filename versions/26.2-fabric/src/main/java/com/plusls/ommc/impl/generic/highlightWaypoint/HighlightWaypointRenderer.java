@@ -86,7 +86,7 @@ public final class HighlightWaypointRenderer implements RenderLevelListener {
             target = cameraPos.add(direction.normalize().multiply(maxDistance, maxDistance, maxDistance));
             renderDistance = maxDistance;
         }
-        this.scale = (float) ((renderDistance > 8 ? renderDistance - 8 : 0) * 0.2 + 1) * 0.0265F;
+        this.scale = (float) ((renderDistance > 8 ? renderDistance - 8 : 0) * 0.2 + 1) * 0.04F;
 
         PoseStack stack = new PoseStack();
         stack.pushPose();
@@ -185,11 +185,19 @@ public final class HighlightWaypointRenderer implements RenderLevelListener {
                                 mainTarget.getDepthTextureView(),
                                 OptionalDouble.empty())
                 ) {
+                    //#if MC>=260300
+                    //$$ renderPass.setPipeline(RenderSystem.getCompiledPipeline(WAYPOINT_ICON));
+                    //#else
                     renderPass.setPipeline(WAYPOINT_ICON);
+                    //#endif
                     RenderSystem.bindDefaultUniforms(renderPass);
                     renderPass.setUniform("DynamicTransforms", dynamicTransforms);
                     var atlas = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(net.minecraft.data.AtlasIds.BLOCKS);
+                    //#if MC>=260300
+                    //$$ renderPass.setUniform("Sampler0", atlas.getTextureView(), atlas.getSampler());
+                    //#else
                     renderPass.bindTexture("Sampler0", atlas.getTextureView(), atlas.getSampler());
+                    //#endif
                     renderPass.setVertexBuffer(0, info.vertexBuffer().slice());
                     renderPass.setIndexBuffer(info.indexBuffer(), info.indexType());
                     renderPass.drawIndexed(info.indexCount(), 1, info.firstIndex(), info.baseVertex(), 0);

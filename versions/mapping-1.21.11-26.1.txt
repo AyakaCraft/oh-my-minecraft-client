@@ -23,4 +23,3 @@ net.minecraft.client.resources.model.WeightedVariants net.minecraft.client.rende
 net.minecraft.client.resources.model.QuadCollection net.minecraft.client.resources.model.geometry.QuadCollection
 net.minecraft.client.resources.model.UnbakedGeometry net.minecraft.client.resources.model.geometry.UnbakedGeometry
 net.minecraft.client.resources.model.ModelState net.minecraft.client.renderer.block.dispatch.ModelState
-

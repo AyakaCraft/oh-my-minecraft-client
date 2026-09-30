@@ -101,7 +101,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         stack.pushPose();
         stack.mulPose(new Matrix4f().rotation(camera.rotation()));
 
-        float scale = (float) ((renderDistance > 8 ? renderDistance - 8 : 0) * 0.2 + 1) * 0.0265F;
+        float scale = (float) ((renderDistance > 8 ? renderDistance - 8 : 0) * 0.2 + 1) * 0.04F;
         stack.scale(RenderUtil.getSizeScalingXSign() * scale, -scale, -scale);
 
         stack.pushPose();

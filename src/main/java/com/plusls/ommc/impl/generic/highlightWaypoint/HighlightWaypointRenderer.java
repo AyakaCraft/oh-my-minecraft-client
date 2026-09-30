@@ -17,7 +17,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -107,7 +106,7 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
         stack.pushPose();
         stack.mulPose(new Matrix4f().rotation(camera.rotation()));
 
-        float scale = (float) ((renderDistance > 8 ? renderDistance - 8 : 0) * 0.2 + 1) * 0.0265F;
+        float scale = (float) ((renderDistance > 8 ? renderDistance - 8 : 0) * 0.2 + 1) * 0.04F;
         stack.scale(RenderUtil.getSizeScalingXSign() * scale, -scale, -scale);
 
         stack.pushPose();
@@ -204,9 +203,9 @@ public class HighlightWaypointRenderer implements RenderLevelListener {
                 //#if MC>=12109
                 //$$ Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(net.minecraft.data.AtlasIds.BLOCKS).getTextureView()
                 //#elseif MC>=12108
-                //$$ Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getTextureView()
+                //$$ Minecraft.getInstance().getModelManager().getAtlas(net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS).getTextureView()
                 //#else
-                //$$ Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getTexture()
+                //$$ Minecraft.getInstance().getModelManager().getAtlas(net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS).getTexture()
                 //#endif
         //$$ );
         //#endif
