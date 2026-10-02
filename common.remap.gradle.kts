@@ -200,7 +200,7 @@ tasks.runServer {
     }
 }
 
-var modVersion = property("mod.version").toString()
+val modVersion = property("mod.version").toString()
 val modVersionType = if (hasProperty("mod.version.type")) {
     when (property("mod.version.type").toString().lowercase(Locale.ROOT)) {
         "beta" -> "beta"
@@ -209,9 +209,6 @@ val modVersionType = if (hasProperty("mod.version.type")) {
     }
 } else {
     "release"
-}
-if (modVersionType != "release") {
-    modVersion += "-$modVersionType"
 }
 
 val archivesBaseName = property("mod.archives_base_name").toString()
@@ -386,7 +383,7 @@ publisher {
 
     // debug = true
 
-    versionType = property("mod.version.type").toString()
+    versionType = modVersionType
     projectVersion = fullProjectVersion
 
     gameVersions = minecraftVersions
