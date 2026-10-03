@@ -3,7 +3,6 @@ package com.plusls.ommc.impl.generic.highlightWaypoint;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.context.CommandContext;
 import com.plusls.ommc.SharedConstants;
-import com.plusls.ommc.api.command.ClientBlockPosArgument;
 import com.plusls.ommc.game.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorTextComponent;
 import com.plusls.ommc.mixin.accessor.AccessorTranslatableComponent;
@@ -12,8 +11,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -23,6 +20,9 @@ import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.hendrixshen.magiclib.api.command.client.ClientCommandManager;
+import top.hendrixshen.magiclib.api.command.client.ClientCommandSource;
+import top.hendrixshen.magiclib.api.command.client.arguments.ClientBlockPosArgument;
 import top.hendrixshen.magiclib.api.compat.minecraft.network.chat.ComponentCompat;
 import top.hendrixshen.magiclib.api.compat.minecraft.network.chat.StyleCompat;
 import top.hendrixshen.magiclib.impl.compat.minecraft.world.level.dimension.DimensionWrapper;
@@ -34,10 +34,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-//#if MC > 11901
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-//#endif
 
 //#if MC > 11802
 import net.minecraft.network.chat.contents.*;
@@ -54,25 +50,18 @@ public class HighlightWaypointHandler {
     private final HighlightWaypointRenderer renderer = HighlightWaypointRenderer.getInstance();
 
     public static void init() {
-        //#if MC > 11901
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
-        //#else
-        //$$ ClientCommandManager.DISPATCHER.register(
-        //#endif
+        ClientCommandManager.register(dispatcher -> dispatcher.register(
                 ClientCommandManager.literal(HighlightWaypointHandler.highlightWaypoint).then(
                         ClientCommandManager.argument("pos", ClientBlockPosArgument.blockPos())
                                 .executes(HighlightWaypointHandler.instance::runCommand)
-        //#if MC > 11901
-                )));
-        //#else
-        //$$ ));
-        //#endif
+                )
+        ));
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> HighlightWaypointHandler.instance.clearHighlightPos());
         HighlightWaypointRenderer.init();
         HighlightWaypointResourceLoader.init();
     }
 
-    private int runCommand(CommandContext<FabricClientCommandSource> context) {
+    private int runCommand(CommandContext<ClientCommandSource> context) {
         BlockPos pos = ClientBlockPosArgument.getBlockPos(context, "pos");
         this.setHighlightPos(pos, false);
 
