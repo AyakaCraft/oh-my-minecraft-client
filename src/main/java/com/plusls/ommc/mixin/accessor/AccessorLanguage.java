@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import top.hendrixshen.magiclib.api.dependency.annotation.Dependencies;
 import top.hendrixshen.magiclib.api.dependency.annotation.Dependency;
 
-@Dependencies(require = @Dependency(value = "minecraft", versionPredicates = ">=1.16"))
+@Dependencies(require = @Dependency(value = "minecraft"))
 @Mixin(Language.class)
 public interface AccessorLanguage {
 
