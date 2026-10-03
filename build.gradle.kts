@@ -47,7 +47,7 @@ preprocess {
     mc12110_fabric.link(mc12111_fabric, null)
 
     mc12111_fabric.link(mc2601_fabric, file("versions/mapping-1.21.11-26.1.txt"))
-    mc2601_fabric.link(mc2602_fabric, file("versions/mapping-26.1-26.2.txt"))
+    mc2601_fabric.link(mc2602_fabric, null)
     mc2602_fabric.link(mc2603_fabric, file("versions/mapping-26.2-26.3.txt"))
     strictExtraMappings = false
 }

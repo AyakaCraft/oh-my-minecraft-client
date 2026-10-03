@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.google.common.collect.Lists;
-import com.plusls.ommc.util.InventoryUtil;
+import com.plusls.ommc.util.ItemUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.effect.MobEffects;
@@ -30,10 +30,9 @@ public class AutoSwitchElytraHelper {
 
     public static boolean isChestArmor(ItemStack itemStack) {
         //#if MC>=12103
-        var slotGroup = fi.dy.masa.malilib.util.EquipmentUtils.getEquipmentSlot(itemStack);
-        return slotGroup != null && slotGroup.test(EquipmentSlot.CHEST) && !ItemStackCompat.of(itemStack).is(Items.ELYTRA);
+        return ItemUtil.allowsEquipmentSlot(itemStack, EquipmentSlot.CHEST) && !ItemStackCompat.of(itemStack).is(Items.ELYTRA);
         //#else
-        //$$ return InventoryUtil.getEquipmentSlotForItem(itemStack) == EquipmentSlot.CHEST &&
+        //$$ return ItemUtil.getEquipmentSlot(itemStack) == EquipmentSlot.CHEST &&
         //$$         !ItemStackCompat.of(itemStack).is(Items.ELYTRA);
         //#endif
     }

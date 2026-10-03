@@ -1,7 +1,6 @@
 package com.plusls.ommc.impl.feature.realSneaking;
 
 import com.plusls.ommc.game.Configs;
-import com.plusls.ommc.util.CompatGetUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import top.hendrixshen.magiclib.api.compat.minecraft.world.entity.EntityCompat;
@@ -17,7 +16,7 @@ public class RealSneakingEventHelper {
 
     private static void preClientTick(Minecraft minecraftClient) {
         if (minecraftClient.player != null) {
-            LivingEntityCompat entityCompat = CompatGetUtil.getLivingEntityCompat(minecraftClient.player);
+            LivingEntityCompat entityCompat = LivingEntityCompat.of(minecraftClient.player);
             if (EntityCompat.of(minecraftClient.player).getMaxUpStep() - MIN_STEP_HEIGHT >= 0.00001) {
                 prevStepHeight = entityCompat.getMaxUpStep();
             }

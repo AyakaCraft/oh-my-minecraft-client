@@ -6,6 +6,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.plusls.ommc.api.sortInventory.IDyeBlock;
 import com.plusls.ommc.game.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorAbstractContainerScreen;
+import com.plusls.ommc.util.Tuple;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -13,9 +14,7 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,6 +33,8 @@ import java.util.*;
 //#if MC > 12005
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.core.component.DataComponents;
+//#else
+//$$ import net.minecraft.nbt.CompoundTag;
 //#endif
 
 //#if MC > 11902
@@ -57,56 +58,56 @@ public class SortInventoryHelper {
     private static final Map<MapColor, Integer> MAP_COLOR_MAPPING = Maps.newHashMap();
 
     static {
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(null, 0);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.WHITE, 1);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.LIGHT_GRAY, 2);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.GRAY, 3);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.BLACK, 4);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.BROWN, 5);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.RED, 6);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.ORANGE, 7);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.YELLOW, 8);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.LIME, 9);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.GREEN, 10);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.CYAN, 11);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.LIGHT_BLUE, 12);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.BLUE, 13);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.PURPLE, 14);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.MAGENTA, 15);
-        SortInventoryHelper.DYE_COLOR_MAPPING.put(DyeColor.PINK, 16);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(null, 0);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.SNOW, 1);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_LIGHT_GRAY, 2);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_GRAY, 3);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_BLACK, 4);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_BROWN, 5);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_RED, 6);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_ORANGE, 7);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_YELLOW, 8);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_LIGHT_GREEN, 9);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_GREEN, 10);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_CYAN, 11);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_LIGHT_BLUE, 12);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_BLUE, 13);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_PURPLE, 14);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_MAGENTA, 15);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.COLOR_PINK, 16);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_WHITE, 1);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_LIGHT_GRAY, 2);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_GRAY, 3);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_BLACK, 4);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_BROWN, 5);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_RED, 6);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_ORANGE, 7);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_YELLOW, 8);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_LIGHT_GREEN, 9);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_GREEN, 10);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_CYAN, 11);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_LIGHT_BLUE, 12);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_BLUE, 13);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_PURPLE, 14);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_MAGENTA, 15);
-        SortInventoryHelper.MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_PINK, 16);
+        DYE_COLOR_MAPPING.put(null, 0);
+        DYE_COLOR_MAPPING.put(DyeColor.WHITE, 1);
+        DYE_COLOR_MAPPING.put(DyeColor.LIGHT_GRAY, 2);
+        DYE_COLOR_MAPPING.put(DyeColor.GRAY, 3);
+        DYE_COLOR_MAPPING.put(DyeColor.BLACK, 4);
+        DYE_COLOR_MAPPING.put(DyeColor.BROWN, 5);
+        DYE_COLOR_MAPPING.put(DyeColor.RED, 6);
+        DYE_COLOR_MAPPING.put(DyeColor.ORANGE, 7);
+        DYE_COLOR_MAPPING.put(DyeColor.YELLOW, 8);
+        DYE_COLOR_MAPPING.put(DyeColor.LIME, 9);
+        DYE_COLOR_MAPPING.put(DyeColor.GREEN, 10);
+        DYE_COLOR_MAPPING.put(DyeColor.CYAN, 11);
+        DYE_COLOR_MAPPING.put(DyeColor.LIGHT_BLUE, 12);
+        DYE_COLOR_MAPPING.put(DyeColor.BLUE, 13);
+        DYE_COLOR_MAPPING.put(DyeColor.PURPLE, 14);
+        DYE_COLOR_MAPPING.put(DyeColor.MAGENTA, 15);
+        DYE_COLOR_MAPPING.put(DyeColor.PINK, 16);
+        MAP_COLOR_MAPPING.put(null, 0);
+        MAP_COLOR_MAPPING.put(MapColor.SNOW, 1);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_LIGHT_GRAY, 2);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_GRAY, 3);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_BLACK, 4);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_BROWN, 5);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_RED, 6);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_ORANGE, 7);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_YELLOW, 8);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_LIGHT_GREEN, 9);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_GREEN, 10);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_CYAN, 11);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_LIGHT_BLUE, 12);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_BLUE, 13);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_PURPLE, 14);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_MAGENTA, 15);
+        MAP_COLOR_MAPPING.put(MapColor.COLOR_PINK, 16);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_WHITE, 1);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_LIGHT_GRAY, 2);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_GRAY, 3);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_BLACK, 4);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_BROWN, 5);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_RED, 6);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_ORANGE, 7);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_YELLOW, 8);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_LIGHT_GREEN, 9);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_GREEN, 10);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_CYAN, 11);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_LIGHT_BLUE, 12);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_BLUE, 13);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_PURPLE, 14);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_MAGENTA, 15);
+        MAP_COLOR_MAPPING.put(MapColor.TERRACOTTA_PINK, 16);
     }
 
     private static Screen getScreen(Minecraft client) {
@@ -534,12 +535,7 @@ public class SortInventoryHelper {
         //$$ return itemStack.hasTag();
         //#else
         ItemContainerContents data = itemStack.get(DataComponents.CONTAINER);
-
-        if (data != null) {
-            return !itemStack.isEmpty() && !data.stream().toList().isEmpty();
-        }
-
-        return false;
+        return data != null && !itemStack.isEmpty() && !data.stream().toList().isEmpty();
         //#endif
     }
 }

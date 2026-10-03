@@ -44,7 +44,7 @@ public class HighlightWaypointHandler {
     @Getter
     private static final HighlightWaypointHandler instance = new HighlightWaypointHandler();
     private static final String highlightWaypoint = "highlightWaypoint";
-    private static final Pattern pattern = Pattern.compile("(?:(?:x\\s*:\\s*)?(?<x>(?:[+-]?\\d+)(?:\\.\\d+)?)(?:[df])?)(?:(?:(?:\\s*[,，]\\s*(?:y\\s*:\\s*)?)|(?:\\s+))(?<y>(?:[+-]?\\d+)(?:\\.\\d+)?)(?:[df])?)?(?:(?:(?:\\s*[,，]\\s*(?:z\\s*:\\s*)?)|(?:\\s+))(?<z>(?:[+-]?\\d+)(?:\\.\\d+)?)(?:[df])?)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern pattern = Pattern.compile("(?:x\\s*:\\s*)?(?<x>[+-]?\\d+(?:\\.\\d+)?)[df]?(?:(?:\\s*[,，]\\s*(?:y\\s*:\\s*)?|\\s+)(?<y>[+-]?\\d+(?:\\.\\d+)?)[df]?)?(?:\\s*[,，]\\s*(?:z\\s*:\\s*)?|\\s+)(?<z>[+-]?\\d+(?:\\.\\d+)?)[df]?", Pattern.CASE_INSENSITIVE);
 
     private final MutablePair<BlockPos, BlockPos> highlightPos = MutablePair.of(null, null);
     private final HighlightWaypointRenderer renderer = HighlightWaypointRenderer.getInstance();
