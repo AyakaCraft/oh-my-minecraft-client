@@ -2,7 +2,7 @@ import java.util.*
 
 plugins {
     `maven-publish`
-    id("net.fabricmc.fabric-loom") version("1.17-SNAPSHOT")
+    id("net.fabricmc.fabric-loom") version("1.18-SNAPSHOT")
     id("com.replaymod.preprocess") version ("c5abb4fb12")
     id("me.fallenbreath.yamlang") version("1.5.0")
     id("com.hypherionmc.modutils.modpublisher") version("2.2.1")

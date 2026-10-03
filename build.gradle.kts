@@ -1,9 +1,9 @@
 @file:Suppress("LocalVariableName")
 
 plugins {
-    id("net.fabricmc.fabric-loom-remap") version("1.17-SNAPSHOT") apply(false)
-    id("net.fabricmc.fabric-loom") version("1.17-SNAPSHOT") apply(false)
-    //id("dev.architectury.loom") version("1.17-SNAPSHOT") apply(false)
+    id("net.fabricmc.fabric-loom-remap") version("1.18-SNAPSHOT") apply(false)
+    id("net.fabricmc.fabric-loom") version("1.18-SNAPSHOT") apply(false)
+    //id("dev.architectury.loom") version("1.18-SNAPSHOT") apply(false)
     id("com.replaymod.preprocess") version("c5abb4fb12")
     id("me.fallenbreath.yamlang") version("1.5.0") apply(false)
     id("com.hypherionmc.modutils.modpublisher") version("2.2.1") apply(false)
