@@ -17,7 +17,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 //#endif
 
 public class ShulkerBoxItemHelper {
-    public static final int SHULKERBOX_MAX_STACK_AMOUNT = 64;
+    public static final int SHULKER_BOX_MAX_STACK_AMOUNT = 64;
 
     public static boolean isEmptyShulkerBoxItem(ItemStack itemStack) {
         if (!isShulkerBoxBlockItem(itemStack)) {
@@ -99,7 +99,7 @@ public class ShulkerBoxItemHelper {
 
     public static int getMaxCount(ItemStack itemStack) {
         if (Configs.sortInventorySupportEmptyShulkerBoxStack.getBooleanValue() && isEmptyShulkerBoxItem(itemStack)) {
-            return SHULKERBOX_MAX_STACK_AMOUNT;
+            return SHULKER_BOX_MAX_STACK_AMOUNT;
         } else {
             return itemStack.getMaxStackSize();
         }

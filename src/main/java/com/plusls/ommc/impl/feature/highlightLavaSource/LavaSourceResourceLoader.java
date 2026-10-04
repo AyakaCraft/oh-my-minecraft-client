@@ -2,12 +2,11 @@ package com.plusls.ommc.impl.feature.highlightLavaSource;
 
 import com.plusls.ommc.SharedConstants;
 import com.plusls.ommc.game.Configs;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.Identifier;
@@ -19,19 +18,42 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
-
 //#if MC < 11903
 //$$ import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 //$$ import net.minecraft.client.renderer.texture.TextureAtlas;
 //#endif
 
-public class LavaSourceResourceLoader implements SimpleSynchronousResourceReloadListener {
+//#if MC>=12109
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+//#else
+//$$ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+//$$ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+//$$ import net.minecraft.client.renderer.texture.TextureAtlas;
+//#endif
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class LavaSourceResourceLoader implements
+        //#if MC>=12109
+        ResourceManagerReloadListener
+        //#else
+        //$$ SimpleSynchronousResourceReloadListener
+        //#endif
+{
+    private static final LavaSourceResourceLoader instance = new LavaSourceResourceLoader();
+    private static final Identifier listenerId = SharedConstants.identifier("lava_reload_listener");
+
+    //#if MC>=12109
+    private static final Identifier flowingSpriteId = SharedConstants.identifier("lava_flow");
+    private static final Identifier stillSpriteId = SharedConstants.identifier("lava_still");
+    //#else
+    //$$ private static final ResourceLocation flowingSpriteId = SharedConstants.identifier("block/lava_flow");
+    //$$ private static final ResourceLocation stillSpriteId = SharedConstants.identifier("block/lava_still");
+    //#endif
+
     public static final TextureAtlasSprite[] lavaSourceSpites = new TextureAtlasSprite[2];
     public static final TextureAtlasSprite[] defaultLavaSourceSpites = new TextureAtlasSprite[2];
-    private static final Identifier listenerId = SharedConstants.identifier("lava_reload_listener");
-    private static final Identifier flowingSpriteId = SharedConstants.identifier("block/lava_flow");
-    private static final Identifier stillSpriteId = SharedConstants.identifier("block/lava_still");
     public static TextureAtlasSprite lavaSourceFlowSprite;
     public static TextureAtlasSprite lavaSourceStillSprite;
     public static TextureAtlasSprite defaultLavaSourceFlowSprite;
@@ -45,22 +67,29 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
         //$$     registry.register(stillSpriteId);
         //$$ });
         //#endif
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new LavaSourceResourceLoader());
+
+        //#if MC>=12109
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(listenerId, instance);
+        //#else
+        //$$ ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(instance);
+        //#endif
     }
 
-    @Override
-    public Identifier getFabricId() {
-        return listenerId;
-    }
+    //#if MC<12109
+    //$$ @Override
+    //$$ public ResourceLocation getFabricId() {
+    //$$     return listenerId;
+    //$$ }
+    //#endif
 
     @Override
     public void onResourceManagerReload(@NotNull ResourceManager manager) {
         //#if MC>=12109
         var atlasManager = Minecraft.getInstance().getAtlasManager();
-        lavaSourceStillSprite = atlasManager.get(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, stillSpriteId));
-        lavaSourceFlowSprite = atlasManager.get(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, flowingSpriteId));
+        lavaSourceStillSprite = atlasManager.get(Sheets.BLOCKS_MAPPER.apply(stillSpriteId));
+        lavaSourceFlowSprite = atlasManager.get(Sheets.BLOCKS_MAPPER.apply(flowingSpriteId));
         //#elseif MC > 11404
-        //$$ final Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS);
+        //$$ final java.util.function.Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS);
         //$$ lavaSourceStillSprite = atlas.apply(stillSpriteId);
         //$$ lavaSourceFlowSprite = atlas.apply(flowingSpriteId);
         //#else

@@ -18,6 +18,8 @@ preprocess {
     //vars.put("NEO_FORGE", modPlatform == "neoforge" ? 1 : 0)
     //vars.put("FABRIC_LIKE", fabricLike ? 1 : 0)
     //vars.put("FORGE_LIKE", forgeLike ? 1 : 0)
+
+    patternAnnotation = "com.plusls.ommc.util.preprocess.Pattern"
 }
 
 val javaCompatibility = JavaVersion.VERSION_25

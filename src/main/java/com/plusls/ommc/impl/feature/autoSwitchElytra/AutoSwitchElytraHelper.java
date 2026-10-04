@@ -21,7 +21,7 @@ public class AutoSwitchElytraHelper {
     public static final int CHEST_SLOT_IDX = 6;
 
     public static boolean checkFall(Player player) {
-        return !PlayerCompat.of(player).isOnGround() &&
+        return !player.onGround() &&
                 !player.isFallFlying() &&
                 !player.isInWater() &&
                 !player.isInLava() &&

@@ -2,6 +2,7 @@ package com.plusls.ommc.impl.feature.worldEaterMineHelper;
 
 import com.plusls.ommc.game.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorBlockStateBase;
+import com.plusls.ommc.util.RegistryCompat;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockStateModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -26,15 +27,10 @@ import java.util.function.Predicate;
 //$$ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 //#endif
 
-//#if MC >= 11903
-import net.minecraft.core.registries.BuiltInRegistries;
-//#else
-//$$ import net.minecraft.core.Registry;
-//#endif
-
 public class WorldEaterMineHelper {
     public static final Map<Block, BlockStateModel> customModels = new HashMap<>();
     public static final Map<Block, BlockStateModel> customFullModels = new HashMap<>();
+
     //#if MC>=12105
     public static final ThreadLocal<Boolean> bakingWeighted = ThreadLocal.withInitial(() -> false);
     public static final ThreadLocal<Boolean> weightedBaked = ThreadLocal.withInitial(() -> false);
@@ -42,11 +38,7 @@ public class WorldEaterMineHelper {
 
     public static boolean blockInWorldEaterMineHelperWhitelist(Block block) {
         String blockName = block.getName().getString();
-        //#if MC >= 11903
-        String blockId = BuiltInRegistries.BLOCK.getKey(block).toString();
-        //#else
-        //$$ String blockId = Registry.BLOCK.getKey(block).toString();
-        //#endif
+        String blockId = RegistryCompat.getBlockId(block).toString();
         return Configs.worldEaterMineHelperWhitelist
                 .getStrings()
                 .stream()
@@ -77,14 +69,7 @@ public class WorldEaterMineHelper {
             int j = 0;
 
             for (int i = y + 1; i <= yMax; ++i) {
-                if (world.getBlockState(new BlockPos(x, i, z))
-                        //#if MC > 11904
-                        .isSolid()
-                        //#else
-                        //$$ .getMaterial().isSolidBlocking()
-                        //#endif
-                        && j < 20
-                ) {
+                if (world.getBlockState(new BlockPos(x, i, z)).isSolid() && j < 20) {
                     return false;
                 }
 
