@@ -10,10 +10,11 @@ public class ModMenuApiImpl implements ModMenuApiCompat {
         return (screen) -> {
             ConfigGui configGui = new ConfigGui();
             //#if MC > 11903
-            return configGui.setParent(screen);
+            configGui.setParent(screen);
             //#else
             //$$ configGui.setParentGui(screen);
             //#endif
+            return configGui;
         };
     }
 
