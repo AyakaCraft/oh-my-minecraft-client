@@ -6,7 +6,6 @@ import com.plusls.ommc.SharedConstants;
 import com.plusls.ommc.game.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorTextComponent;
 import com.plusls.ommc.mixin.accessor.AccessorTranslatableComponent;
-import com.plusls.ommc.util.ChatUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -211,10 +210,10 @@ public class HighlightWaypointHandler {
                     .withStyle(ChatFormatting.UNDERLINE)
                     .withStyle(style -> style.withClickEvent(originalClickEvent == null ||
                             Configs.forceParseWaypointFromChat.getBooleanValue()
-                            ? ChatUtil.runCommand(String.format("/%s %d %d %d", HighlightWaypointHandler.highlightWaypoint, pos.getX(), pos.getY(), pos.getZ()))
+                            ? new ClickEvent.RunCommand(String.format("/%s %d %d %d", HighlightWaypointHandler.highlightWaypoint, pos.getX(), pos.getY(), pos.getZ()))
                             : originalClickEvent))
                     .withStyle(style -> style.withHoverEvent(
-                            ChatUtil.showText(ComponentCompat.literal(SharedConstants.getTranslation("highlight_waypoint.tooltip")))
+                            new HoverEvent.ShowText(ComponentCompat.literal(SharedConstants.getTranslation("highlight_waypoint.tooltip")))
                     )));
             prevIdx = waypointIdx + waypointString.length();
         }

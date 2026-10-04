@@ -3,9 +3,10 @@ package com.plusls.ommc.util;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
-//#if MC<12103
+//#if MC>=12103
+import net.minecraft.network.chat.Component;
+//#else
 //$$ import net.minecraft.world.entity.EquipmentSlot;
 //$$ import net.minecraft.world.item.ItemStack;
 //$$ import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,7 @@ public final class ItemUtil {
 
     public static String getItemNameTranslated(Item item) {
         //#if MC>=12103
-        return net.minecraft.network.chat.Component.translatable(item.getDescriptionId()).getString();
+        return Component.translatable(item.getDescriptionId()).getString();
         //#else
         //$$ return item.getDescription().getString();
         //#endif

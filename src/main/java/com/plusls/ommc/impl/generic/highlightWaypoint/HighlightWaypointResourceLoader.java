@@ -4,18 +4,18 @@ import com.plusls.ommc.SharedConstants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 //#if MC>=12109
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 //#else
 //$$ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 //$$ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+//$$ import net.minecraft.client.renderer.texture.TextureAtlas;
 //#endif
 
 //#if MC < 11903
@@ -42,7 +42,7 @@ public class HighlightWaypointResourceLoader implements
 
     public static TextureAtlasSprite targetIdSprite;
 
-    protected static void init() {
+    static void init() {
         //#if MC < 11903
         //$$ ClientSpriteRegistryCallback.event(TextureAtlas.LOCATION_BLOCKS).register(
         //$$         (atlasTexture, registry) -> registry.register(HighlightWaypointResourceLoader.targetId)

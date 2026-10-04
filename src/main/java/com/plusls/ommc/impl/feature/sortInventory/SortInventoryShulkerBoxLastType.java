@@ -10,7 +10,7 @@ public enum SortInventoryShulkerBoxLastType implements EnumOptionEntry {
 
     @Override
     public EnumOptionEntry[] getAllValues() {
-        return SortInventoryShulkerBoxLastType.values();
+        return values();
     }
 
     @Override
